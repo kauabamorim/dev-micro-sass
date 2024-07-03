@@ -12,8 +12,18 @@ import {
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { signOut } from "next-auth/react";
+import { Session } from "next-auth";
 
-export function HomeForm() {
+type Props = {
+  user: Session["user"];
+};
+export function HomeForm({ user }: Props) {
+  if (!user) {
+    console.log("Deslogado");
+    return;
+  }
+
   const [isSearchExpanded, setIsSearchExpanded] = useState(false);
   return (
     <div className="flex flex-col min-h-[100dvh]">
@@ -58,7 +68,9 @@ export function HomeForm() {
               <Button variant="ghost" size="icon" className="rounded-full">
                 <Avatar className="h-8 w-8">
                   <AvatarImage src="/placeholder-user.jpg" />
-                  <AvatarFallback>KB</AvatarFallback>
+                  <AvatarFallback>
+                    {user?.email ? user?.email[0] : user?.email}
+                  </AvatarFallback>
                 </Avatar>
               </Button>
             </DropdownMenuTrigger>
@@ -66,7 +78,9 @@ export function HomeForm() {
               <div className="flex items-center gap-2 p-2">
                 <Avatar className="h-8 w-8">
                   <AvatarImage src="/placeholder-user.jpg" />
-                  <AvatarFallback>KB</AvatarFallback>
+                  <AvatarFallback>
+                    {user?.email ? user?.email[0] : user?.email}
+                  </AvatarFallback>
                 </Avatar>
                 <div className="grid gap-0.5 leading-none">
                   <div className="font-semibold">John Doe</div>
@@ -100,6 +114,7 @@ export function HomeForm() {
                   href="#"
                   className="flex items-center gap-2"
                   prefetch={false}
+                  onClick={() => signOut()}
                 >
                   <div className="h-4 w-4 text-black" />
                   <span>Sign out</span>
