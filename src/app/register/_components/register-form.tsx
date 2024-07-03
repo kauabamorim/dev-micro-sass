@@ -4,12 +4,26 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
+import { signIn } from "next-auth/react";
+import { toast } from "@/components/ui/use-toast";
 
 export function RegisterForm() {
   const form = useForm();
 
-  const handleSubmit = form.handleSubmit((data) => {
-    console.log(data);
+  const handleSubmit = form.handleSubmit(async (data) => {
+    try {
+      console.log(data);
+      await signIn("email", { email: data.email, redirect: false });
+      toast({
+        title: "Magic Link Sent",
+        description: "Check your email for the magic link to login",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "An error occurred. Please try again.",
+      });
+    }
   });
 
   return (
@@ -33,7 +47,7 @@ export function RegisterForm() {
                 {...form.register("email")}
               />
             </div>
-            <div>
+            {/* <div>
               <Label htmlFor="password">Password</Label>
               <Input
                 id="password"
@@ -52,7 +66,7 @@ export function RegisterForm() {
                 required
                 {...form.register("confirmPassword")}
               />
-            </div>
+            </div> */}
             <Button
               type="submit"
               className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow-sm transition-colors hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
