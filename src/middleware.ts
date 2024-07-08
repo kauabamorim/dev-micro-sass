@@ -14,7 +14,7 @@ export default function middeleware(request: NextRequest) {
     return NextResponse.redirect(new URL(geturl("/app/home")));
   }
 
-  // if (pathname.includes("/app") && !token) {
-  //   return NextResponse.redirect(new URL(geturl("/register")));
-  // }
+  if (request.nextUrl.pathname.startsWith("/app") && !token) {
+    return NextResponse.rewrite(new URL("/", request.url));
+  }
 }

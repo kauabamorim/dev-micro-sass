@@ -14,6 +14,7 @@ import {
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { signOut } from "next-auth/react";
 import { Session } from "next-auth";
+import { NextResponse } from "next/server";
 
 type Props = {
   user: Session["user"];
@@ -21,7 +22,7 @@ type Props = {
 export function HomeForm({ user }: Props) {
   if (!user) {
     console.log("Deslogado");
-    return;
+    return "";
   }
 
   const [isSearchExpanded, setIsSearchExpanded] = useState(false);
