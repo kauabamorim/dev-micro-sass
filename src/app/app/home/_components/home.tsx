@@ -91,7 +91,7 @@ export function HomeForm({ user }: Props) {
               <DropdownMenuSeparator />
               <DropdownMenuItem>
                 <Link
-                  href="/app/profile"
+                  href="#"
                   className="flex items-center gap-2"
                   prefetch={false}
                 >
@@ -101,7 +101,7 @@ export function HomeForm({ user }: Props) {
               </DropdownMenuItem>
               <DropdownMenuItem>
                 <Link
-                  href="#"
+                  href="/app/settings"
                   className="flex items-center gap-2"
                   prefetch={false}
                 >

@@ -19,7 +19,7 @@ type Props = {
   user: Session["user"];
 };
 
-export function Profile({ user }: Props) {
+export function Settings({ user }: Props) {
   const updateProfile = async (e: any) => {
     e.preventDefault();
     try {
