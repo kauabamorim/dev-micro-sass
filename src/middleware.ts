@@ -10,7 +10,7 @@ export default function middeleware(request: NextRequest) {
     pathname,
   });
 
-  if (request.nextUrl.pathname.startsWith("/register") && token) {
+  if (request.nextUrl.pathname === "/" && token) {
     return NextResponse.redirect(new URL("/app/home", request.url));
   }
 

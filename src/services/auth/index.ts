@@ -10,7 +10,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     signIn: "/register",
     signOut: "/",
     error: "/error",
-    verifyRequest: "/register",
+    verifyRequest: "/",
     newUser: "/app/home",
   },
   adapter: PrismaAdapter(prisma),
