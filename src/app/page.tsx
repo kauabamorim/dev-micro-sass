@@ -12,16 +12,21 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
-import { signIn } from "next-auth/react";
 import { toast } from "@/components/ui/use-toast";
+import { signIn } from "next-auth/react";
 
 export default function Home() {
   const form = useForm();
 
   const handleSubmit = form.handleSubmit(async (data) => {
     try {
-      console.log(data);
-      await signIn("email", { email: data.email, redirect: false });
+      await signIn("email", {
+        email: data.email,
+        firstName: data?.firstName,
+        lastName: data?.lastName,
+        password: data?.password,
+        redirect: false,
+      });
       toast({
         title: "Magic Link Sent",
         description: "Check your email for the magic link to login",
@@ -78,11 +83,21 @@ export default function Home() {
                     <div className="grid grid-cols-2 gap-4">
                       <div className="grid gap-2">
                         <Label htmlFor="firstName">First Name</Label>
-                        <Input id="firstName" type="text" placeholder="John" />
+                        <Input
+                          id="firstName"
+                          type="text"
+                          placeholder="John"
+                          {...form.register("firstName")}
+                        />
                       </div>
                       <div className="grid gap-2">
                         <Label htmlFor="lastName">Last Name</Label>
-                        <Input id="lastName" type="text" placeholder="Doe" />
+                        <Input
+                          id="lastName"
+                          type="text"
+                          placeholder="Doe"
+                          {...form.register("lastName")}
+                        />
                       </div>
                     </div>
                     <div className="grid gap-2">
@@ -97,7 +112,11 @@ export default function Home() {
                     </div>
                     <div className="grid gap-2">
                       <Label htmlFor="password">Password</Label>
-                      <Input id="password" type="password" />
+                      <Input
+                        id="password"
+                        type="password"
+                        {...form.register("password")}
+                      />
                     </div>
                   </CardContent>
                   <CardFooter>
