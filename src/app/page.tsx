@@ -13,24 +13,28 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
 import { toast } from "@/components/ui/use-toast";
-import { signIn } from "next-auth/react";
+import axios from "axios";
 
 export default function Home() {
   const form = useForm();
 
   const handleSubmit = form.handleSubmit(async (data) => {
     try {
-      await signIn("email", {
+      const response = await axios.post("api/auth/register", {
         email: data.email,
-        firstName: data?.firstName,
-        lastName: data?.lastName,
-        password: data?.password,
-        redirect: false,
+        firstName: data.firstName,
+        lastName: data.lastName,
+        password: data.password,
       });
-      toast({
-        title: "Magic Link Sent",
-        description: "Check your email for the magic link to login",
-      });
+
+      if (response.status === 201) {
+        toast({
+          title: "Account Created",
+          description: "Your account has been successfully created.",
+        });
+      } else {
+        throw new Error("Failed to create account");
+      }
     } catch (error) {
       toast({
         title: "Error",
@@ -55,7 +59,7 @@ export default function Home() {
               </p>
               <div className="flex gap-4">
                 <Link
-                  href="/app/home"
+                  href="/login"
                   className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow-sm transition-colors hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
                   prefetch={false}
                 >
