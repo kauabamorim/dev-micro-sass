@@ -1,9 +1,48 @@
+"use client";
+
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { useForm } from "react-hook-form";
+import { toast } from "@/components/ui/use-toast";
+import axios from "axios";
 
 export function LoginForm() {
+  const form = useForm();
+
+  const handleSubmit = form.handleSubmit(async (data) => {
+    try {
+      const response = await axios.post("api/auth/login", {
+        email: data.email,
+        password: data.password,
+      });
+
+      if (response.status === 200) {
+        // LOGAR
+        toast({
+          title: "Account Created",
+          description: "Your account has been successfully created.",
+        });
+      } else {
+        throw new Error("Failed to login account");
+      }
+    } catch (error) {
+      console.log("error:", error);
+
+      let errorMessage = "An error occurred. Please try again.";
+
+      if (axios.isAxiosError(error)) {
+        errorMessage = error.response?.data?.error;
+      }
+
+      toast({
+        title: "Error",
+        description: errorMessage,
+      });
+    }
+  });
+
   return (
     <div className="flex min-h-[100dvh] flex-col items-center justify-center bg-background">
       <div className="container mx-auto px-4 py-12 sm:px-6 lg:px-8">
@@ -14,7 +53,7 @@ export function LoginForm() {
               Login
             </h1>
           </div>
-          <form className="space-y-4">
+          <form className="space-y-4" onSubmit={handleSubmit}>
             <div>
               <Label htmlFor="email">Email</Label>
               <Input
@@ -22,6 +61,7 @@ export function LoginForm() {
                 type="email"
                 placeholder="example@email.com"
                 required
+                {...form.register("email")}
               />
             </div>
             <div>
@@ -31,6 +71,7 @@ export function LoginForm() {
                 type="password"
                 placeholder="Enter your password"
                 required
+                {...form.register("password")}
               />
             </div>
             <Button
