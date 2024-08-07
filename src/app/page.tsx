@@ -36,9 +36,17 @@ export default function Home() {
         throw new Error("Failed to create account");
       }
     } catch (error) {
+      console.log("error:", error);
+
+      let errorMessage = "An error occurred. Please try again.";
+
+      if (axios.isAxiosError(error)) {
+        errorMessage = error.response?.data?.error;
+      }
+
       toast({
         title: "Error",
-        description: "An error occurred. Please try again.",
+        description: errorMessage,
       });
     }
   });
