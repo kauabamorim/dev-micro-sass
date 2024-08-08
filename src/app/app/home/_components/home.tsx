@@ -15,12 +15,16 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { signOut } from "next-auth/react";
 import { Session } from "next-auth";
 import { NextResponse } from "next/server";
-
+import { deleteCookie } from "@/lib/utils";
 
 export function HomeForm() {
-
+  const handleSignOut = () => {
+    deleteCookie("token");
+    window.location.href = "/";
+  };
 
   const [isSearchExpanded, setIsSearchExpanded] = useState(false);
+
   return (
     <div className="flex flex-col min-h-[100dvh]">
       <header className="bg-background border-b px-4 lg:px-6 h-14 flex items-center justify-between">
@@ -64,9 +68,7 @@ export function HomeForm() {
               <Button variant="ghost" size="icon" className="rounded-full">
                 <Avatar className="h-8 w-8">
                   <AvatarImage src="/placeholder-user.jpg" />
-                  <AvatarFallback>
-                    {''}
-                  </AvatarFallback>
+                  <AvatarFallback>{""}</AvatarFallback>
                 </Avatar>
               </Button>
             </DropdownMenuTrigger>
@@ -74,9 +76,7 @@ export function HomeForm() {
               <div className="flex items-center gap-2 p-2">
                 <Avatar className="h-8 w-8">
                   <AvatarImage src="/placeholder-user.jpg" />
-                  <AvatarFallback>
-                    {''}
-                  </AvatarFallback>
+                  <AvatarFallback>{""}</AvatarFallback>
                 </Avatar>
                 <div className="grid gap-0.5 leading-none">
                   <div className="font-semibold">John Doe</div>
@@ -110,7 +110,10 @@ export function HomeForm() {
                   href="#"
                   className="flex items-center gap-2"
                   prefetch={false}
-                  onClick={() => signOut()}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleSignOut();
+                  }}
                 >
                   <div className="h-4 w-4 text-black" />
                   <span>Sign out</span>
