@@ -1,19 +1,26 @@
 import { NextRequest, NextResponse } from "next/server";
+import { verifyToken } from "./lib/auth";
 
-export default function middeleware(request: NextRequest) {
-  const token = request.cookies.get("authjs.session-token");
+export default function middleware(request: NextRequest) {
+  const cookie = request.cookies.get("token");
   const pathname = request.nextUrl.pathname;
+
+  const token = cookie ? cookie.value : null;
 
   console.log({
     token,
     pathname,
   });
 
-  // if (request.nextUrl.pathname === "/" && token) {
-  //   return NextResponse.redirect(new URL("/app/home", request.url));
-  // }
+  const verifyTokenUser = token ? verifyToken(token) : null;
 
-  // if (request.nextUrl.pathname.startsWith("/app") && !token) {
-  //   return NextResponse.redirect(new URL("/", request.url));
-  // }
+  if (pathname.startsWith("/app") && !verifyTokenUser) {
+    return NextResponse.redirect(new URL("/", request.url));
+  }
+
+  if (pathname === "/" && verifyTokenUser) {
+    return NextResponse.redirect(new URL("/app/home", request.url));
+  }
+
+  return NextResponse.next();
 }

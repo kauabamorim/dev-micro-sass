@@ -16,14 +16,9 @@ import { signOut } from "next-auth/react";
 import { Session } from "next-auth";
 import { NextResponse } from "next/server";
 
-type Props = {
-  user: Session["user"];
-};
-export function HomeForm({ user }: Props) {
-  if (!user) {
-    console.log("Deslogado");
-    return "";
-  }
+
+export function HomeForm() {
+
 
   const [isSearchExpanded, setIsSearchExpanded] = useState(false);
   return (
@@ -70,7 +65,7 @@ export function HomeForm({ user }: Props) {
                 <Avatar className="h-8 w-8">
                   <AvatarImage src="/placeholder-user.jpg" />
                   <AvatarFallback>
-                    {user?.email ? user?.email[0] : user?.email}
+                    {''}
                   </AvatarFallback>
                 </Avatar>
               </Button>
@@ -80,7 +75,7 @@ export function HomeForm({ user }: Props) {
                 <Avatar className="h-8 w-8">
                   <AvatarImage src="/placeholder-user.jpg" />
                   <AvatarFallback>
-                    {user?.email ? user?.email[0] : user?.email}
+                    {''}
                   </AvatarFallback>
                 </Avatar>
                 <div className="grid gap-0.5 leading-none">
