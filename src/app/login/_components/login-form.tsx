@@ -84,7 +84,7 @@ export function LoginForm() {
             className="text-sm font-medium text-primary hover:underline"
             prefetch={false}
           >
-            Don't have an account? Sign Up
+            Dont have an account? Sign Up
           </Link>
         </div>
       </div>
