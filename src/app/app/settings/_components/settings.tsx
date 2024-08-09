@@ -15,11 +15,7 @@ import { Switch } from "@/components/ui/switch";
 import { Session } from "next-auth";
 import Link from "next/link";
 
-type Props = {
-  user: Session["user"];
-};
-
-export function Settings({ user }: Props) {
+export function Settings() {
   const updateProfile = async (e: any) => {
     e.preventDefault();
     try {
@@ -29,10 +25,6 @@ export function Settings({ user }: Props) {
     }
   };
 
-  if (!user) {
-    console.log("Deslogado");
-    return "";
-  }
   return (
     <div className="mx-auto max-w-[800px] px-4 py-10 sm:px-6 lg:px-8">
       <div className="grid grid-cols-1 gap-8 md:grid-cols-[1fr_300px]">
@@ -69,7 +61,7 @@ export function Settings({ user }: Props) {
                   id="email"
                   type="email"
                   placeholder="Enter your email"
-                  defaultValue={user?.email ? user.email : ""}
+                  defaultValue={""}
                 />
               </div>
               <div className="space-y-2">
@@ -94,9 +86,7 @@ export function Settings({ user }: Props) {
               <div className="flex items-center justify-center">
                 <Avatar className="h-24 w-24">
                   <AvatarImage src="/placeholder-user.jpg" />
-                  <AvatarFallback>
-                    {user?.email ? user?.email[0] : user?.email}
-                  </AvatarFallback>
+                  <AvatarFallback>{""}</AvatarFallback>
                 </Avatar>
               </div>
               <div className="mt-4 flex justify-center">

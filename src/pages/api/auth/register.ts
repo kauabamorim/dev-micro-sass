@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
+import { generateToken } from "../../../lib/auth";
 
 const prisma = new PrismaClient();
 
@@ -31,7 +32,9 @@ export default async function handler(
         },
       });
 
-      res.status(201).json(newUser);
+      const token = generateToken(newUser.id);
+
+      res.status(201).json({ token: token });
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: "Failed to register user" });

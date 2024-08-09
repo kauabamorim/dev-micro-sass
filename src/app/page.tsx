@@ -32,6 +32,9 @@ export default function Home() {
           title: "Account Created",
           description: "Your account has been successfully created.",
         });
+        const token = response.data.token;
+        document.cookie = `token=${token}; path=/`;
+        window.location.href = "/";
       } else {
         throw new Error("Failed to create account");
       }
