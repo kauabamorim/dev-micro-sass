@@ -40,6 +40,7 @@ export default async function handler(
       res.status(500).json({ error: "Failed to register user" });
     }
   } else {
+    console.log("reeeeeeeqqqqq: ", req.method, 'testeee: ', req);
     res.setHeader("Allow", ["POST"]);
     res.status(405).end(`Method ${req.method} Not Allowed`);
   }
