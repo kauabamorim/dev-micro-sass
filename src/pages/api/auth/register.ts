@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
 import { generateToken } from "../../../lib/auth";
+import { generateUniqueUsername } from "@/lib/utils";
 
 const prisma = new PrismaClient();
 
@@ -28,6 +29,7 @@ export default async function handler(
           email,
           firstName,
           lastName,
+          username: generateUniqueUsername(firstName, 8),
           password: hashedPassword,
         },
       });

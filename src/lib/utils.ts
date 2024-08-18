@@ -17,3 +17,17 @@ export function getCookieValue(name: string) {
   }
   return null;
 }
+
+export function generateUniqueUsername(prefix = "user", length = 8) {
+  const chars = "abcdefghijklmnopqrstuvwxyz0123456789";
+  const charsLength = chars.length;
+  let username = prefix;
+
+  for (let i = 0; i < length; i++) {
+    username += chars.charAt(Math.floor(Math.random() * charsLength));
+  }
+
+  const timestamp = Date.now().toString(36).substring(0, 4);
+
+  return `${username}_${timestamp}`;
+}

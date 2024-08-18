@@ -91,7 +91,7 @@ export function Settings() {
                   <Input
                     id="username"
                     placeholder="Enter your username"
-                    defaultValue="johndoe"
+                    defaultValue={user.username}
                   />
                 </div>
               </div>
