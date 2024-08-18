@@ -25,6 +25,8 @@ export function Header() {
     setTheme(theme === "light" ? "dark" : "light");
   };
 
+  const iconColor = theme === "dark" ? "text-white" : "text-black";
+
   return (
     <header
       className={`flex items-center justify-between bg-background px-4 py-3 shadow-sm sm:px-6 ${
@@ -32,7 +34,11 @@ export function Header() {
       }`}
     >
       <div className="flex items-center gap-4">
-        <Link href="#" className="flex items-center gap-2" prefetch={false}>
+        <Link
+          href="#"
+          className={`flex items-center gap-2 rounded-full ${iconColor}`}
+          prefetch={false}
+        >
           <MountainIcon className="h-6 w-6" />
           <span className="sr-only">Acme Inc</span>
         </Link>
@@ -49,7 +55,7 @@ export function Header() {
         <Button
           variant="ghost"
           size="icon"
-          className="rounded-full"
+          className={`rounded-full ${iconColor}`}
           onClick={toggleTheme}
         >
           {theme === "light" ? (
@@ -61,7 +67,11 @@ export function Header() {
         </Button>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon" className="rounded-full">
+            <Button
+              variant="ghost"
+              size="icon"
+              className={`rounded-full ${iconColor}`}
+            >
               <BellIcon className="h-5 w-5" />
               <span className="sr-only">Notifications</span>
             </Button>
@@ -126,7 +136,11 @@ export function Header() {
         </DropdownMenu>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon" className="rounded-full">
+            <Button
+              variant="ghost"
+              size="icon"
+              className={`rounded-full ${iconColor}`}
+            >
               <MessageCircleIcon className="h-5 w-5" />
               <span className="sr-only">Chat</span>
             </Button>
@@ -191,13 +205,17 @@ export function Header() {
         </DropdownMenu>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon" className="rounded-full">
+            <Button
+              variant="ghost"
+              size="icon"
+              className={`rounded-full ${iconColor}`}
+            >
               <img
                 src="/placeholder.svg"
                 width={32}
                 height={32}
                 alt="Avatar"
-                className="rounded-full"
+                className={`rounded-full ${iconColor}`}
                 style={{ aspectRatio: "32/32", objectFit: "cover" }}
               />
               <span className="sr-only">User menu</span>
@@ -218,7 +236,7 @@ export function Header() {
             </DropdownMenuItem>
             <DropdownMenuItem>
               <Link
-                href="#"
+                href="/app/settings"
                 className="flex items-center gap-2"
                 prefetch={false}
               >
