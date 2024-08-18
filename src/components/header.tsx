@@ -20,8 +20,17 @@ export function Header() {
     window.location.href = "/";
   };
 
+  const [theme, setTheme] = useState("light");
+  const toggleTheme = () => {
+    setTheme(theme === "light" ? "dark" : "light");
+  };
+
   return (
-    <header className="flex items-center justify-between bg-background px-4 py-3 shadow-sm sm:px-6">
+    <header
+      className={`flex items-center justify-between bg-background px-4 py-3 shadow-sm sm:px-6 ${
+        theme === "dark" ? "dark" : ""
+      }`}
+    >
       <div className="flex items-center gap-4">
         <Link href="#" className="flex items-center gap-2" prefetch={false}>
           <MountainIcon className="h-6 w-6" />
@@ -37,6 +46,19 @@ export function Header() {
         </div>
       </div>
       <div className="flex items-center gap-4">
+        <Button
+          variant="ghost"
+          size="icon"
+          className="rounded-full"
+          onClick={toggleTheme}
+        >
+          {theme === "light" ? (
+            <SunIcon className="h-5 w-5" />
+          ) : (
+            <MoonIcon className="h-5 w-5" />
+          )}
+          <span className="sr-only">Toggle theme</span>
+        </Button>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" size="icon" className="rounded-full">
@@ -196,7 +218,7 @@ export function Header() {
             </DropdownMenuItem>
             <DropdownMenuItem>
               <Link
-                href="/app/settings"
+                href="#"
                 className="flex items-center gap-2"
                 prefetch={false}
               >
@@ -210,10 +232,6 @@ export function Header() {
                 href="#"
                 className="flex items-center gap-2"
                 prefetch={false}
-                onClick={(e) => {
-                  e.preventDefault();
-                  handleSignOut();
-                }}
               >
                 <LogOutIcon className="h-4 w-4" />
                 <span>Sign out</span>
@@ -361,6 +379,52 @@ function UserIcon(props: any) {
     >
       <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
       <circle cx="12" cy="7" r="4" />
+    </svg>
+  );
+}
+
+function SunIcon(props: any) {
+  return (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <circle cx="12" cy="12" r="4" />
+      <path d="M12 2v2" />
+      <path d="M12 20v2" />
+      <path d="m4.93 4.93 1.41 1.41" />
+      <path d="m17.66 17.66 1.41 1.41" />
+      <path d="M2 12h2" />
+      <path d="M20 12h2" />
+      <path d="m6.34 17.66-1.41 1.41" />
+      <path d="m19.07 4.93-1.41 1.41" />
+    </svg>
+  );
+}
+
+function MoonIcon(props: any) {
+  return (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
     </svg>
   );
 }
