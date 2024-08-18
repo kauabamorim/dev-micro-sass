@@ -14,8 +14,44 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Switch } from "@/components/ui/switch";
 import { Session } from "next-auth";
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import { verifyToken } from "@/lib/auth";
+import { getCookieValue } from "@/lib/utils";
+
+interface User {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  username: string;
+}
 
 export function Settings() {
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const token = getCookieValue("token");
+
+      if (token) {
+        try {
+          const decoded = await verifyToken(token);
+          if (decoded) {
+            const response = await fetch(`/api/user/${decoded.id}`);
+            const data = await response.json();
+            setUser(data);
+          }
+        } catch (error) {
+          console.error("Failed to fetch user", error);
+        }
+      } else {
+        console.error("No token found in cookies");
+      }
+    };
+
+    fetchUser();
+  }, []);
+
   const updateProfile = async (e: any) => {
     e.preventDefault();
     try {
@@ -24,6 +60,10 @@ export function Settings() {
       console.log("ERROR UPDATE FRONT: ");
     }
   };
+
+  if (!user) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="mx-auto max-w-[800px] px-4 py-10 sm:px-6 lg:px-8">
@@ -43,7 +83,7 @@ export function Settings() {
                   <Input
                     id="name"
                     placeholder="Enter your name"
-                    defaultValue="John Doe"
+                    defaultValue={user.firstName}
                   />
                 </div>
                 <div className="space-y-2">
@@ -61,7 +101,7 @@ export function Settings() {
                   id="email"
                   type="email"
                   placeholder="Enter your email"
-                  defaultValue={""}
+                  defaultValue={user?.email}
                 />
               </div>
               <div className="space-y-2">
