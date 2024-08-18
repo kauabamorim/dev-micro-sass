@@ -15,14 +15,26 @@ import { useEffect, useState } from "react";
 import { verifyToken } from "@/lib/auth";
 
 export function Header() {
+  const [theme, setTheme] = useState("light");
+
   const handleSignOut = () => {
     deleteCookie("token");
     window.location.href = "/";
   };
 
-  const [theme, setTheme] = useState("light");
+  useEffect(() => {
+    const getThemeFromCookie = () => {
+      const match = document.cookie.match(/theme=([^;]*)/);
+      return match ? match[1] : "light";
+    };
+
+    setTheme(getThemeFromCookie());
+  }, []);
+
   const toggleTheme = () => {
-    setTheme(theme === "light" ? "dark" : "light");
+    const newTheme = theme === "light" ? "dark" : "light";
+    document.cookie = `theme=${newTheme}; path=/`;
+    setTheme(newTheme);
   };
 
   const iconColor = theme === "dark" ? "text-white" : "text-black";
@@ -211,7 +223,7 @@ export function Header() {
               className={`rounded-full ${iconColor}`}
             >
               <img
-                src="/placeholder.svg"
+                src={`https://api.dicebear.com/9.x/identicon/svg`}
                 width={32}
                 height={32}
                 alt="Avatar"
@@ -250,6 +262,10 @@ export function Header() {
                 href="#"
                 className="flex items-center gap-2"
                 prefetch={false}
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleSignOut();
+                }}
               >
                 <LogOutIcon className="h-4 w-4" />
                 <span>Sign out</span>
