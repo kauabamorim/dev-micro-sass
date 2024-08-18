@@ -29,7 +29,7 @@ export default async function handler(
           email,
           firstName,
           lastName,
-          username: generateUniqueUsername(firstName, 8),
+          username: generateUniqueUsername(),
           password: hashedPassword,
         },
       });

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -15,15 +15,52 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { signOut } from "next-auth/react";
 import { Session } from "next-auth";
 import { NextResponse } from "next/server";
-import { deleteCookie } from "@/lib/utils";
+import { deleteCookie, getCookieValue } from "@/lib/utils";
+import { verifyToken } from "@/lib/auth";
+
+interface User {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  username: string;
+}
 
 export function HomeForm() {
+  const [user, setUser] = useState<User | null>(null);
+  const [isSearchExpanded, setIsSearchExpanded] = useState(false);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const token = getCookieValue("token");
+
+      if (token) {
+        try {
+          const decoded = await verifyToken(token);
+          if (decoded) {
+            const response = await fetch(`/api/user/${decoded.id}`);
+            const data = await response.json();
+            setUser(data);
+          }
+        } catch (error) {
+          console.error("Failed to fetch user", error);
+        }
+      } else {
+        console.error("No token found in cookies");
+      }
+    };
+
+    fetchUser();
+  }, []);
+
   const handleSignOut = () => {
     deleteCookie("token");
     window.location.href = "/";
   };
 
-  const [isSearchExpanded, setIsSearchExpanded] = useState(false);
+  if (!user) {
+    return <LoadingSkeleton />;
+  }
 
   return (
     <div className="flex flex-col min-h-[100dvh]">
@@ -68,7 +105,7 @@ export function HomeForm() {
               <Button variant="ghost" size="icon" className="rounded-full">
                 <Avatar className="h-8 w-8">
                   <AvatarImage src="/placeholder-user.jpg" />
-                  <AvatarFallback>{""}</AvatarFallback>
+                  <AvatarFallback>{user?.username}</AvatarFallback>
                 </Avatar>
               </Button>
             </DropdownMenuTrigger>
@@ -76,11 +113,13 @@ export function HomeForm() {
               <div className="flex items-center gap-2 p-2">
                 <Avatar className="h-8 w-8">
                   <AvatarImage src="/placeholder-user.jpg" />
-                  <AvatarFallback>{""}</AvatarFallback>
+                  <AvatarFallback>{user?.username}</AvatarFallback>
                 </Avatar>
                 <div className="grid gap-0.5 leading-none">
-                  <div className="font-semibold">John Doe</div>
-                  <div className="text-sm text-muted-foreground">@johndoe</div>
+                  <div className="font-semibold">{`${user?.firstName} ${user?.lastName}`}</div>
+                  <div className="text-sm text-muted-foreground">
+                    {user?.username}
+                  </div>
                 </div>
               </div>
               <DropdownMenuSeparator />
@@ -124,82 +163,6 @@ export function HomeForm() {
         </nav>
       </header>
       <main className="flex-1" />
-      {/* <footer className="bg-muted p-6 md:py-12 w-full">
-        <div className="container max-w-7xl grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-8 text-sm">
-          <div className="grid gap-1">
-            <h3 className="font-semibold">Company</h3>
-            <Link href="#" prefetch={false}>
-              About Us
-            </Link>
-            <Link href="#" prefetch={false}>
-              Our Team
-            </Link>
-            <Link href="#" prefetch={false}>
-              Careers
-            </Link>
-            <Link href="#" prefetch={false}>
-              News
-            </Link>
-          </div>
-          <div className="grid gap-1">
-            <h3 className="font-semibold">Products</h3>
-            <Link href="#" prefetch={false}>
-              Men
-            </Link>
-            <Link href="#" prefetch={false}>
-              Women
-            </Link>
-            <Link href="#" prefetch={false}>
-              Kids
-            </Link>
-            <Link href="#" prefetch={false}>
-              Accessories
-            </Link>
-          </div>
-          <div className="grid gap-1">
-            <h3 className="font-semibold">Resources</h3>
-            <Link href="#" prefetch={false}>
-              Blog
-            </Link>
-            <Link href="#" prefetch={false}>
-              Community
-            </Link>
-            <Link href="#" prefetch={false}>
-              Support
-            </Link>
-            <Link href="#" prefetch={false}>
-              FAQs
-            </Link>
-          </div>
-          <div className="grid gap-1">
-            <h3 className="font-semibold">Legal</h3>
-            <Link href="#" prefetch={false}>
-              Privacy Policy
-            </Link>
-            <Link href="#" prefetch={false}>
-              Terms of Service
-            </Link>
-            <Link href="#" prefetch={false}>
-              Cookie Policy
-            </Link>
-          </div>
-          <div className="grid gap-1">
-            <h3 className="font-semibold">Contact</h3>
-            <Link href="#" prefetch={false}>
-              Support
-            </Link>
-            <Link href="#" prefetch={false}>
-              Sales
-            </Link>
-            <Link href="#" prefetch={false}>
-              Press
-            </Link>
-            <Link href="#" prefetch={false}>
-              Partnerships
-            </Link>
-          </div>
-        </div>
-      </footer> */}
     </div>
   );
 }
@@ -279,5 +242,34 @@ function SearchIcon(props: any) {
       <circle cx="11" cy="11" r="8" />
       <path d="m21 21-4.3-4.3" />
     </svg>
+  );
+}
+
+function LoadingSkeleton() {
+  return (
+    <div className="flex flex-col min-h-[100dvh]">
+      <header className="bg-background border-b px-4 lg:px-6 h-14 flex items-center justify-between">
+        <div className="flex items-center">
+          <div className="h-6 w-6 bg-gray-300 rounded-full"></div>
+          <span className="sr-only">Acme Social</span>
+        </div>
+        <div className="flex items-center gap-4">
+          <div className="h-6 w-6 bg-gray-300 rounded-full"></div>
+        </div>
+        <nav className="flex items-center gap-4 sm:gap-6">
+          <div className="h-5 w-5 bg-gray-300 rounded-full"></div>
+          <div className="h-5 w-5 bg-gray-300 rounded-full"></div>
+          <div className="h-8 w-8 bg-gray-300 rounded-full"></div>
+        </nav>
+      </header>
+      <main className="flex-1 animate-pulse p-4">
+        <div className="space-y-4">
+          <div className="h-6 bg-gray-300 rounded w-1/4"></div>
+          <div className="h-6 bg-gray-300 rounded w-1/3"></div>
+          <div className="h-6 bg-gray-300 rounded w-1/2"></div>
+          <div className="h-6 bg-gray-300 rounded w-3/4"></div>
+        </div>
+      </main>
+    </div>
   );
 }

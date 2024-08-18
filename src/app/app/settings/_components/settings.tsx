@@ -62,7 +62,7 @@ export function Settings() {
   };
 
   if (!user) {
-    return <div>Loading...</div>;
+    return <LoadingSkeleton />;
   }
 
   return (
@@ -179,6 +179,94 @@ export function Settings() {
         <Link href="/app/home" className="flex items-center" prefetch={false}>
           <Button variant="outline">Go Back</Button>
         </Link>
+      </div>
+    </div>
+  );
+}
+
+function LoadingSkeleton() {
+  return (
+    <div className="mx-auto max-w-[800px] px-4 py-10 sm:px-6 lg:px-8">
+      <div className="grid grid-cols-1 gap-8 md:grid-cols-[1fr_300px]">
+        <div className="space-y-8">
+          <Card className="animate-pulse">
+            <CardHeader>
+              <div className="h-6 bg-gray-300 rounded w-1/3"></div>
+              <div className="h-4 bg-gray-300 rounded w-1/2 mt-2"></div>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <div className="space-y-2">
+                  <div className="h-4 bg-gray-300 rounded w-1/3"></div>
+                  <div className="h-10 bg-gray-200 rounded"></div>
+                </div>
+                <div className="space-y-2">
+                  <div className="h-4 bg-gray-300 rounded w-1/3"></div>
+                  <div className="h-10 bg-gray-200 rounded"></div>
+                </div>
+              </div>
+              <div className="space-y-2">
+                <div className="h-4 bg-gray-300 rounded w-1/3"></div>
+                <div className="h-10 bg-gray-200 rounded"></div>
+              </div>
+              <div className="space-y-2">
+                <div className="h-4 bg-gray-300 rounded w-1/3"></div>
+                <div className="h-10 bg-gray-200 rounded"></div>
+              </div>
+            </CardContent>
+            <CardFooter>
+              <div className="h-10 bg-gray-200 rounded w-1/4 ml-auto"></div>
+            </CardFooter>
+          </Card>
+          <Card className="animate-pulse">
+            <CardHeader>
+              <div className="h-6 bg-gray-300 rounded w-1/3"></div>
+              <div className="h-4 bg-gray-300 rounded w-1/2 mt-2"></div>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center justify-center">
+                <div className="h-24 w-24 bg-gray-200 rounded-full"></div>
+              </div>
+              <div className="mt-4 flex justify-center">
+                <div className="h-10 bg-gray-200 rounded w-1/3"></div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+        <div className="space-y-8">
+          <Card className="animate-pulse">
+            <CardHeader>
+              <div className="h-6 bg-gray-300 rounded w-1/3"></div>
+              <div className="h-4 bg-gray-300 rounded w-1/2 mt-2"></div>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="space-y-2">
+                  <div className="h-4 bg-gray-300 rounded w-1/2"></div>
+                  <div className="h-4 bg-gray-200 rounded w-2/3"></div>
+                </div>
+                <div className="h-6 bg-gray-200 rounded w-10"></div>
+              </div>
+              <div className="flex items-center justify-between">
+                <div className="space-y-2">
+                  <div className="h-4 bg-gray-300 rounded w-1/2"></div>
+                  <div className="h-4 bg-gray-200 rounded w-2/3"></div>
+                </div>
+                <div className="h-6 bg-gray-200 rounded w-10"></div>
+              </div>
+              <div className="flex items-center justify-between">
+                <div className="space-y-2">
+                  <div className="h-4 bg-gray-300 rounded w-1/2"></div>
+                  <div className="h-4 bg-gray-200 rounded w-2/3"></div>
+                </div>
+                <div className="h-6 bg-gray-200 rounded w-10"></div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+      <div className="mt-8 flex justify-start">
+        <div className="h-10 bg-gray-200 rounded w-1/4"></div>
       </div>
     </div>
   );
