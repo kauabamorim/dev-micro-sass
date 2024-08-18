@@ -6,6 +6,7 @@ import { generateToken } from '../../../lib/auth';
 const prisma = new PrismaClient();
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  console.log("reeeeeeeqqqqqLOGINNN: ", req.method, "testeee: ", req);
   if (req.method === 'POST') {
     const { email, password } = req.body;
 
