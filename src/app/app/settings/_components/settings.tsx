@@ -1,4 +1,6 @@
 "use client";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardHeader,
@@ -9,14 +11,19 @@ import {
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Switch } from "@/components/ui/switch";
-import { Session } from "next-auth";
-import Link from "next/link";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select";
+import { Header } from "@/components/header";
+import { getCookieValue } from "@/lib/utils";
 import { useEffect, useState } from "react";
 import { verifyToken } from "@/lib/auth";
-import { getCookieValue } from "@/lib/utils";
 
 interface User {
   id: string;
@@ -52,222 +59,250 @@ export function Settings() {
     fetchUser();
   }, []);
 
-  const updateProfile = async (e: any) => {
-    e.preventDefault();
-    try {
-      console.log("aaaaa");
-    } catch (error: any) {
-      console.log("ERROR UPDATE FRONT: ");
-    }
-  };
-
   if (!user) {
     return <LoadingSkeleton />;
   }
 
   return (
-    <div className="mx-auto max-w-[800px] px-4 py-10 sm:px-6 lg:px-8">
-      <div className="grid grid-cols-1 gap-8 md:grid-cols-[1fr_300px]">
-        <div className="space-y-8">
-          <Card>
-            <CardHeader>
-              <CardTitle>Profile</CardTitle>
-              <CardDescription>
-                Update your profile information.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <div className="space-y-2">
-                  <Label htmlFor="name">Name</Label>
-                  <Input
-                    id="name"
-                    placeholder="Enter your name"
-                    defaultValue={user.firstName}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="username">Username</Label>
-                  <Input
-                    id="username"
-                    placeholder="Enter your username"
-                    defaultValue={user.username}
-                  />
-                </div>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="Enter your email"
-                  defaultValue={user?.email}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  placeholder="Enter your password"
-                />
-              </div>
-            </CardContent>
-            <CardFooter>
-              <Button className="ml-auto">Save Changes</Button>
-            </CardFooter>
-          </Card>
-          <Card>
-            <CardHeader>
-              <CardTitle>Profile Photo</CardTitle>
-              <CardDescription>Update your profile photo.</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-center justify-center">
-                <Avatar className="h-24 w-24">
-                  <AvatarImage src="/placeholder-user.jpg" />
-                  <AvatarFallback>{""}</AvatarFallback>
-                </Avatar>
-              </div>
-              <div className="mt-4 flex justify-center">
-                <Button variant="outline">Change Photo</Button>
-              </div>
-            </CardContent>
-          </Card>
+    <div className="flex flex-col w-full min-h-screen bg-background text-foreground">
+      <Header />
+      <main className="flex min-h-[calc(100vh_-_theme(spacing.16))] bg-muted/40 flex-1 flex-col gap-4 p-4 md:gap-8 md:p-10">
+        <div className="max-w-6xl w-full mx-auto grid gap-2">
+          <h1 className="font-semibold text-3xl">Settings</h1>
         </div>
-        <div className="space-y-8">
-          <Card>
-            <CardHeader>
-              <CardTitle>Account</CardTitle>
-              <CardDescription>Manage your account settings.</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <div className="font-medium">Email Notifications</div>
-                  <div className="text-sm text-muted-foreground">
-                    Receive updates and notifications via email.
+        <div className="grid md:grid-cols-[180px_1fr] lg:grid-cols-[250px_1fr] items-start gap-6 max-w-6xl w-full mx-auto">
+          <nav className="text-sm text-muted-foreground grid gap-4">
+            <Link
+              href="#"
+              className="font-semibold text-primary"
+              prefetch={false}
+            >
+              General
+            </Link>
+            <Link href="#" prefetch={false}>
+              Notifications
+            </Link>
+            <Link href="#" prefetch={false}>
+              Security
+            </Link>
+            <Link href="#" prefetch={false}>
+              Preferences
+            </Link>
+          </nav>
+          <div className="grid gap-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Profile</CardTitle>
+                <CardDescription>
+                  Update your personal information.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <form className="grid gap-6">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="first-name">First Name</Label>
+                      <Input id="first-name" placeholder={user.firstName} />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="last-name">Last Name</Label>
+                      <Input id="last-name" placeholder={user?.lastName} />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="username">Username</Label>
+                    <Input id="username" placeholder={user.username} />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="email">Email</Label>
+                    <Input id="email" type="email" placeholder={user.email} />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="password">Password</Label>
+                    <Input id="password" type="password" />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="profile-photo">Profile Photo</Label>
+                    <div className="flex items-center gap-4">
+                      <Avatar className="h-16 w-16">
+                        <AvatarImage
+                          src="/placeholder-user.jpg"
+                          alt="@shadcn"
+                        />
+                        <AvatarFallback>JD</AvatarFallback>
+                      </Avatar>
+                      <Button variant="outline">Change Photo</Button>
+                    </div>
+                  </div>
+                </form>
+              </CardContent>
+              <CardFooter className="border-t p-6">
+                <Button>Save Changes</Button>
+              </CardFooter>
+            </Card>
+            <Card>
+              <CardHeader>
+                <CardTitle>Notifications</CardTitle>
+                <CardDescription>
+                  Manage your notification preferences.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium">Email Notifications</p>
+                      <p className="text-sm text-muted-foreground">
+                        Receive email notifications for important updates.
+                      </p>
+                    </div>
+                    <Switch id="email-notifications" />
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium">
+                        Desktop Notifications
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        Receive desktop notifications for important updates.
+                      </p>
+                    </div>
+                    <Switch id="desktop-notifications" />
                   </div>
                 </div>
-                <Switch />
-              </div>
-              <div className="flex items-center justify-between">
-                <div>
-                  <div className="font-medium">Two-Factor Authentication</div>
-                  <div className="text-sm text-muted-foreground">
-                    Enhance your account security.
+              </CardContent>
+              <CardFooter className="border-t p-6">
+                <Button>Save Changes</Button>
+              </CardFooter>
+            </Card>
+            <Card>
+              <CardHeader>
+                <CardTitle>Security</CardTitle>
+                <CardDescription>
+                  Manage your account security settings.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium">
+                        Two-Factor Authentication
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        Add an extra layer of security to your account.
+                      </p>
+                    </div>
+                    <Switch id="two-factor-auth" />
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium">Login Activity</p>
+                      <p className="text-sm text-muted-foreground">
+                        View your recent login activity.
+                      </p>
+                    </div>
+                    <Button variant="outline">View Activity</Button>
                   </div>
                 </div>
-                <Switch />
-              </div>
-              <div className="flex items-center justify-between">
-                <div>
-                  <div className="font-medium">Delete Account</div>
-                  <div className="text-sm text-muted-foreground">
-                    This action cannot be undone.
+              </CardContent>
+              <CardFooter className="border-t p-6">
+                <Button>Save Changes</Button>
+              </CardFooter>
+            </Card>
+            <Card>
+              <CardHeader>
+                <CardTitle>Preferences</CardTitle>
+                <CardDescription>
+                  Customize your app preferences.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium">Dark Mode</p>
+                      <p className="text-sm text-muted-foreground">
+                        Switch to a dark color scheme.
+                      </p>
+                    </div>
+                    <Switch id="dark-mode" />
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium">Language</p>
+                      <p className="text-sm text-muted-foreground">
+                        Select your preferred language.
+                      </p>
+                    </div>
+                    <Select>
+                      <SelectTrigger className="text-muted-foreground">
+                        <SelectValue placeholder="English" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="en">English</SelectItem>
+                        <SelectItem value="es">Español</SelectItem>
+                        <SelectItem value="fr">Français</SelectItem>
+                        <SelectItem value="de">Deutsch</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
                 </div>
-                <Button variant="destructive" size="sm">
-                  Delete
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
+              </CardContent>
+              <CardFooter className="border-t p-6">
+                <Button>Save Changes</Button>
+              </CardFooter>
+            </Card>
+          </div>
         </div>
-      </div>
-      <div className="mt-8 flex justify-start">
-        <Link href="/app/home" className="flex items-center" prefetch={false}>
-          <Button variant="outline">Go Back</Button>
-        </Link>
-      </div>
+      </main>
     </div>
   );
 }
 
 function LoadingSkeleton() {
   return (
-    <div className="mx-auto max-w-[800px] px-4 py-10 sm:px-6 lg:px-8">
-      <div className="grid grid-cols-1 gap-8 md:grid-cols-[1fr_300px]">
-        <div className="space-y-8">
-          <Card className="animate-pulse">
-            <CardHeader>
-              <div className="h-6 bg-gray-300 rounded w-1/3"></div>
-              <div className="h-4 bg-gray-300 rounded w-1/2 mt-2"></div>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <div className="space-y-2">
-                  <div className="h-4 bg-gray-300 rounded w-1/3"></div>
-                  <div className="h-10 bg-gray-200 rounded"></div>
-                </div>
-                <div className="space-y-2">
-                  <div className="h-4 bg-gray-300 rounded w-1/3"></div>
-                  <div className="h-10 bg-gray-200 rounded"></div>
-                </div>
-              </div>
-              <div className="space-y-2">
-                <div className="h-4 bg-gray-300 rounded w-1/3"></div>
-                <div className="h-10 bg-gray-200 rounded"></div>
-              </div>
-              <div className="space-y-2">
-                <div className="h-4 bg-gray-300 rounded w-1/3"></div>
-                <div className="h-10 bg-gray-200 rounded"></div>
-              </div>
-            </CardContent>
-            <CardFooter>
-              <div className="h-10 bg-gray-200 rounded w-1/4 ml-auto"></div>
-            </CardFooter>
-          </Card>
-          <Card className="animate-pulse">
-            <CardHeader>
-              <div className="h-6 bg-gray-300 rounded w-1/3"></div>
-              <div className="h-4 bg-gray-300 rounded w-1/2 mt-2"></div>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-center justify-center">
-                <div className="h-24 w-24 bg-gray-200 rounded-full"></div>
-              </div>
-              <div className="mt-4 flex justify-center">
-                <div className="h-10 bg-gray-200 rounded w-1/3"></div>
-              </div>
-            </CardContent>
-          </Card>
+    <div className="flex flex-col w-full min-h-screen bg-background text-foreground">
+      <header className="bg-background border-b px-4 lg:px-6 h-14 flex items-center justify-between">
+        <div className="w-24 h-6 bg-gray-300 rounded"></div>
+        <div className="flex items-center gap-4">
+          <div className="w-6 h-6 bg-gray-300 rounded-full"></div>
         </div>
-        <div className="space-y-8">
-          <Card className="animate-pulse">
-            <CardHeader>
-              <div className="h-6 bg-gray-300 rounded w-1/3"></div>
-              <div className="h-4 bg-gray-300 rounded w-1/2 mt-2"></div>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div className="space-y-2">
-                  <div className="h-4 bg-gray-300 rounded w-1/2"></div>
-                  <div className="h-4 bg-gray-200 rounded w-2/3"></div>
-                </div>
-                <div className="h-6 bg-gray-200 rounded w-10"></div>
-              </div>
-              <div className="flex items-center justify-between">
-                <div className="space-y-2">
-                  <div className="h-4 bg-gray-300 rounded w-1/2"></div>
-                  <div className="h-4 bg-gray-200 rounded w-2/3"></div>
-                </div>
-                <div className="h-6 bg-gray-200 rounded w-10"></div>
-              </div>
-              <div className="flex items-center justify-between">
-                <div className="space-y-2">
-                  <div className="h-4 bg-gray-300 rounded w-1/2"></div>
-                  <div className="h-4 bg-gray-200 rounded w-2/3"></div>
-                </div>
-                <div className="h-6 bg-gray-200 rounded w-10"></div>
-              </div>
-            </CardContent>
-          </Card>
+      </header>
+
+      <main className="flex min-h-[calc(100vh_-_theme(spacing.16))] bg-muted/40 flex-1 flex-col gap-4 p-4 md:gap-8 md:p-10">
+        <div className="max-w-6xl w-full mx-auto grid gap-2">
+          <div className="h-8 w-1/4 bg-gray-300 rounded"></div>
         </div>
-      </div>
-      <div className="mt-8 flex justify-start">
-        <div className="h-10 bg-gray-200 rounded w-1/4"></div>
-      </div>
+        <div className="grid md:grid-cols-[180px_1fr] lg:grid-cols-[250px_1fr] items-start gap-6 max-w-6xl w-full mx-auto">
+          <nav className="text-sm text-muted-foreground grid gap-4">
+            <div className="h-4 w-1/2 bg-gray-300 rounded"></div>
+            <div className="h-4 w-2/3 bg-gray-300 rounded"></div>
+            <div className="h-4 w-3/4 bg-gray-300 rounded"></div>
+            <div className="h-4 w-1/2 bg-gray-300 rounded"></div>
+          </nav>
+          <div className="grid gap-6">
+            {[...Array(4)].map((_, index) => (
+              <div key={index} className="bg-white p-4 rounded shadow-sm">
+                <div className="animate-pulse">
+                  <div className="h-6 bg-gray-300 rounded mb-4"></div>
+                  <div className="space-y-4">
+                    {[...Array(4)].map((_, i) => (
+                      <div
+                        key={i}
+                        className="flex items-center justify-between"
+                      >
+                        <div className="h-4 bg-gray-300 rounded w-3/4"></div>
+                        <div className="h-4 bg-gray-300 rounded w-1/4"></div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </main>
     </div>
   );
 }
