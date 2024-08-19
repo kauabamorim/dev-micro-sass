@@ -35,6 +35,7 @@ interface User {
 
 export function Settings() {
   const [user, setUser] = useState<User | null>(null);
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -58,6 +59,23 @@ export function Settings() {
 
     fetchUser();
   }, []);
+
+  useEffect(() => {
+    const themeCookie = getCookieValue("theme");
+
+    if (themeCookie === "dark") {
+      setIsDarkMode(true);
+    }
+  }, []);
+
+  const handleDarkModeChange = (checked: boolean) => {
+    setIsDarkMode(checked);
+    document.cookie = `theme=${checked ? "dark" : "light"}; path=/`;
+  };
+
+  const handleSaveChangesTheme = () => {
+    window.location.reload();
+  };
 
   if (!user) {
     return <LoadingSkeleton />;
@@ -226,7 +244,11 @@ export function Settings() {
                         Switch to a dark color scheme.
                       </p>
                     </div>
-                    <Switch id="dark-mode" />
+                    <Switch
+                      id="dark-mode"
+                      checked={isDarkMode}
+                      onCheckedChange={handleDarkModeChange}
+                    />
                   </div>
                   <div className="flex items-center justify-between">
                     <div>
@@ -250,7 +272,7 @@ export function Settings() {
                 </div>
               </CardContent>
               <CardFooter className="border-t p-6">
-                <Button>Save Changes</Button>
+                <Button onClick={handleSaveChangesTheme}>Save Changes</Button>
               </CardFooter>
             </Card>
           </div>
