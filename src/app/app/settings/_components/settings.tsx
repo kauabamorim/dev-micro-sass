@@ -137,7 +137,11 @@ export function Settings() {
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="password">Password</Label>
-                    <Input id="password" type="password" />
+                    <Input
+                      id="password"
+                      type="password"
+                      placeholder="********"
+                    />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="profile-photo">Profile Photo</Label>
