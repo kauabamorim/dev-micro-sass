@@ -12,10 +12,11 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { deleteCookie, getCookieValue } from "@/lib/utils";
 import { useEffect, useState } from "react";
-import { verifyToken } from "@/lib/auth";
+import { Sheet, SheetTrigger, SheetContent } from "@/components/ui/sheet";
 
 export function Header() {
   const [theme, setTheme] = useState("light");
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const handleSignOut = () => {
     deleteCookie("token");
@@ -45,7 +46,23 @@ export function Header() {
         theme === "dark" ? "dark" : ""
       }`}
     >
-      <div className="flex items-center gap-4">
+      {/* Container para dispositivos móveis */}
+      <div className="flex items-center justify-between w-full lg:hidden">
+        <Link
+          href="/app/home"
+          className={`flex items-center gap-2 rounded-full ${iconColor}`}
+          prefetch={false}
+        >
+          <MountainIcon className="h-6 w-6" />
+          <span className="sr-only">Acme Inc</span>
+        </Link>
+        <Button variant="outline" size="icon" className="ml-auto">
+          <MenuIcon className="h-6 w-6" />
+          <span className="sr-only">Toggle menu</span>
+        </Button>
+      </div>
+
+      <div className="hidden lg:flex items-center gap-4 w-full">
         <Link
           href="/app/home"
           className={`flex items-center gap-2 rounded-full ${iconColor}`}
@@ -62,217 +79,217 @@ export function Header() {
             className="h-9 w-[200px] rounded-md bg-muted pl-9 text-sm focus:outline-none focus:ring-1 focus:ring-primary sm:w-[300px]"
           />
         </div>
-      </div>
-      <div className="flex items-center gap-4">
-        <Button
-          variant="ghost"
-          size="icon"
-          className={`rounded-full ${iconColor}`}
-          onClick={toggleTheme}
-        >
-          {theme === "light" ? (
-            <SunIcon className="h-5 w-5" />
-          ) : (
-            <MoonIcon className="h-5 w-5" />
-          )}
-          <span className="sr-only">Toggle theme</span>
-        </Button>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              className={`rounded-full ${iconColor}`}
-            >
-              <BellIcon className="h-5 w-5" />
-              <span className="sr-only">Notifications</span>
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-80">
-            <DropdownMenuLabel>Notifications</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <div className="flex items-center gap-3">
-                <Avatar className="h-8 w-8">
-                  <AvatarImage src="/placeholder-user.jpg" alt="@shadcn" />
-                  <AvatarFallback>AC</AvatarFallback>
-                </Avatar>
-                <div className="flex-1 space-y-1">
-                  <p className="text-sm font-medium leading-none">
-                    New message from Acme Inc
-                  </p>
-                  <p className="text-xs text-muted-foreground">2 hours ago</p>
-                </div>
-              </div>
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <div className="flex items-center gap-3">
-                <Avatar className="h-8 w-8">
-                  <AvatarImage src="/placeholder-user.jpg" alt="@shadcn" />
-                  <AvatarFallback>AC</AvatarFallback>
-                </Avatar>
-                <div className="flex-1 space-y-1">
-                  <p className="text-sm font-medium leading-none">
-                    New order from Acme Inc
-                  </p>
-                  <p className="text-xs text-muted-foreground">1 day ago</p>
-                </div>
-              </div>
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <div className="flex items-center gap-3">
-                <Avatar className="h-8 w-8">
-                  <AvatarImage src="/placeholder-user.jpg" alt="@shadcn" />
-                  <AvatarFallback>AC</AvatarFallback>
-                </Avatar>
-                <div className="flex-1 space-y-1">
-                  <p className="text-sm font-medium leading-none">
-                    Your subscription is expiring soon
-                  </p>
-                  <p className="text-xs text-muted-foreground">3 days ago</p>
-                </div>
-              </div>
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <Link
-                href="#"
-                className="flex items-center gap-2"
-                prefetch={false}
-              >
-                <BellIcon className="h-4 w-4" />
-                <span>View all</span>
-              </Link>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              className={`rounded-full ${iconColor}`}
-            >
-              <MessageCircleIcon className="h-5 w-5" />
-              <span className="sr-only">Chat</span>
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-80">
-            <DropdownMenuLabel>Chat</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <div className="flex items-center gap-3">
-                <Avatar className="h-8 w-8">
-                  <AvatarImage src="/placeholder-user.jpg" alt="@shadcn" />
-                  <AvatarFallback>AC</AvatarFallback>
-                </Avatar>
-                <div className="flex-1 space-y-1">
-                  <p className="text-sm font-medium leading-none">Acme Inc</p>
-                  <p className="text-xs text-muted-foreground">
-                    Hey, how can I help you?
-                  </p>
-                </div>
-              </div>
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <div className="flex items-center gap-3">
-                <Avatar className="h-8 w-8">
-                  <AvatarImage src="/placeholder-user.jpg" alt="@shadcn" />
-                  <AvatarFallback>AC</AvatarFallback>
-                </Avatar>
-                <div className="flex-1 space-y-1">
-                  <p className="text-sm font-medium leading-none">Jane Doe</p>
-                  <p className="text-xs text-muted-foreground">
-                    Hi, I have a question about your product.
-                  </p>
-                </div>
-              </div>
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <div className="flex items-center gap-3">
-                <Avatar className="h-8 w-8">
-                  <AvatarImage src="/placeholder-user.jpg" alt="@shadcn" />
-                  <AvatarFallback>AC</AvatarFallback>
-                </Avatar>
-                <div className="flex-1 space-y-1">
-                  <p className="text-sm font-medium leading-none">John Doe</p>
-                  <p className="text-xs text-muted-foreground">
-                    Can you help me with my order?
-                  </p>
-                </div>
-              </div>
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <Link
-                href="#"
-                className="flex items-center gap-2"
-                prefetch={false}
-              >
-                <MessageCircleIcon className="h-4 w-4" />
-                <span>View all</span>
-              </Link>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              className={`rounded-full ${iconColor}`}
-            >
-              <img
-                src={`https://api.dicebear.com/9.x/identicon/svg`}
-                width={32}
-                height={32}
-                alt="Avatar"
+        <div className="flex items-center gap-4 ml-auto">
+          <Button
+            variant="ghost"
+            size="icon"
+            className={`rounded-full ${iconColor}`}
+            onClick={toggleTheme}
+          >
+            {theme === "light" ? (
+              <SunIcon className="h-5 w-5" />
+            ) : (
+              <MoonIcon className="h-5 w-5" />
+            )}
+            <span className="sr-only">Toggle theme</span>
+          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
                 className={`rounded-full ${iconColor}`}
-                style={{ aspectRatio: "32/32", objectFit: "cover" }}
-              />
-              <span className="sr-only">User menu</span>
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-56">
-            <DropdownMenuLabel>My Account</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <Link
-                href="#"
-                className="flex items-center gap-2"
-                prefetch={false}
               >
-                <UserIcon className="h-4 w-4" />
-                <span>Profile</span>
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <Link
-                href="/app/settings"
-                className="flex items-center gap-2"
-                prefetch={false}
+                <BellIcon className="h-5 w-5" />
+                <span className="sr-only">Notifications</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-80">
+              <DropdownMenuLabel>Notifications</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>
+                <div className="flex items-center gap-3">
+                  <Avatar className="h-8 w-8">
+                    <AvatarImage src="/placeholder-user.jpg" alt="@shadcn" />
+                    <AvatarFallback>AC</AvatarFallback>
+                  </Avatar>
+                  <div className="flex-1 space-y-1">
+                    <p className="text-sm font-medium leading-none">
+                      New message from Acme Inc
+                    </p>
+                    <p className="text-xs text-muted-foreground">2 hours ago</p>
+                  </div>
+                </div>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <div className="flex items-center gap-3">
+                  <Avatar className="h-8 w-8">
+                    <AvatarImage src="/placeholder-user.jpg" alt="@shadcn" />
+                    <AvatarFallback>AC</AvatarFallback>
+                  </Avatar>
+                  <div className="flex-1 space-y-1">
+                    <p className="text-sm font-medium leading-none">
+                      New order from Acme Inc
+                    </p>
+                    <p className="text-xs text-muted-foreground">1 day ago</p>
+                  </div>
+                </div>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <div className="flex items-center gap-3">
+                  <Avatar className="h-8 w-8">
+                    <AvatarImage src="/placeholder-user.jpg" alt="@shadcn" />
+                    <AvatarFallback>AC</AvatarFallback>
+                  </Avatar>
+                  <div className="flex-1 space-y-1">
+                    <p className="text-sm font-medium leading-none">
+                      Your subscription is expiring soon
+                    </p>
+                    <p className="text-xs text-muted-foreground">3 days ago</p>
+                  </div>
+                </div>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>
+                <Link
+                  href="#"
+                  className="flex items-center gap-2"
+                  prefetch={false}
+                >
+                  <BellIcon className="h-4 w-4" />
+                  <span>View all</span>
+                </Link>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className={`rounded-full ${iconColor}`}
               >
-                <SettingsIcon className="h-4 w-4" />
-                <span>Settings</span>
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <Link
-                href="#"
-                className="flex items-center gap-2"
-                prefetch={false}
-                onClick={(e) => {
-                  e.preventDefault();
-                  handleSignOut();
-                }}
+                <MessageCircleIcon className="h-5 w-5" />
+                <span className="sr-only">Chat</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-80">
+              <DropdownMenuLabel>Chat</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>
+                <div className="flex items-center gap-3">
+                  <Avatar className="h-8 w-8">
+                    <AvatarImage src="/placeholder-user.jpg" alt="@shadcn" />
+                    <AvatarFallback>AC</AvatarFallback>
+                  </Avatar>
+                  <div className="flex-1 space-y-1">
+                    <p className="text-sm font-medium leading-none">Acme Inc</p>
+                    <p className="text-xs text-muted-foreground">
+                      Hey, how can I help you?
+                    </p>
+                  </div>
+                </div>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <div className="flex items-center gap-3">
+                  <Avatar className="h-8 w-8">
+                    <AvatarImage src="/placeholder-user.jpg" alt="@shadcn" />
+                    <AvatarFallback>AC</AvatarFallback>
+                  </Avatar>
+                  <div className="flex-1 space-y-1">
+                    <p className="text-sm font-medium leading-none">Jane Doe</p>
+                    <p className="text-xs text-muted-foreground">
+                      Hi, I have a question about your product.
+                    </p>
+                  </div>
+                </div>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <div className="flex items-center gap-3">
+                  <Avatar className="h-8 w-8">
+                    <AvatarImage src="/placeholder-user.jpg" alt="@shadcn" />
+                    <AvatarFallback>AC</AvatarFallback>
+                  </Avatar>
+                  <div className="flex-1 space-y-1">
+                    <p className="text-sm font-medium leading-none">John Doe</p>
+                    <p className="text-xs text-muted-foreground">
+                      Can you help me with my order?
+                    </p>
+                  </div>
+                </div>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>
+                <Link
+                  href="#"
+                  className="flex items-center gap-2"
+                  prefetch={false}
+                >
+                  <MessageCircleIcon className="h-4 w-4" />
+                  <span>View all</span>
+                </Link>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className={`rounded-full ${iconColor}`}
               >
-                <LogOutIcon className="h-4 w-4" />
-                <span>Sign out</span>
-              </Link>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+                <img
+                  src={`https://api.dicebear.com/9.x/identicon/svg`}
+                  width={32}
+                  height={32}
+                  alt="Avatar"
+                  className={`rounded-full ${iconColor}`}
+                  style={{ aspectRatio: "32/32", objectFit: "cover" }}
+                />
+                <span className="sr-only">User menu</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-56">
+              <DropdownMenuLabel>My Account</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>
+                <Link
+                  href="#"
+                  className="flex items-center gap-2"
+                  prefetch={false}
+                >
+                  <UserIcon className="h-4 w-4" />
+                  <span>Profile</span>
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <Link
+                  href="/app/settings"
+                  className="flex items-center gap-2"
+                  prefetch={false}
+                >
+                  <SettingsIcon className="h-4 w-4" />
+                  <span>Settings</span>
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>
+                <Link
+                  href="#"
+                  className="flex items-center gap-2"
+                  prefetch={false}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleSignOut();
+                  }}
+                >
+                  <LogOutIcon className="h-4 w-4" />
+                  <span>Sign out</span>
+                </Link>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </div>
     </header>
   );
@@ -459,6 +476,27 @@ function MoonIcon(props: any) {
       strokeLinejoin="round"
     >
       <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
+    </svg>
+  );
+}
+
+function MenuIcon(props: any) {
+  return (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <line x1="4" x2="20" y1="12" y2="12" />
+      <line x1="4" x2="20" y1="6" y2="6" />
+      <line x1="4" x2="20" y1="18" y2="18" />
     </svg>
   );
 }
