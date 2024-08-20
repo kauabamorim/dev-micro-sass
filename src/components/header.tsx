@@ -94,7 +94,7 @@ export function Header() {
 
           {results.length > 0 && (
             <ul className="absolute z-10 w-full bg-white border border-gray-300 rounded-md shadow-lg mt-1">
-              {results.map((result) => (
+              {results.slice(0, 5).map((result) => (
                 <li
                   key={result.name}
                   className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
@@ -103,6 +103,13 @@ export function Header() {
                   {result.name}
                 </li>
               ))}
+              {results.length >= 5 && (
+                <li className="px-4 py-2 text-blue-500 cursor-pointer hover:bg-gray-100">
+                  <Link href="#" className="text-blue-500">
+                    View all results
+                  </Link>
+                </li>
+              )}
             </ul>
           )}
         </div>
@@ -175,7 +182,7 @@ export function Header() {
           />
           {results.length > 0 && (
             <ul className="absolute z-10 w-full bg-white border border-gray-300 rounded-md shadow-lg mt-1">
-              {results.map((result) => (
+              {results.slice(0, 5).map((result) => (
                 <li
                   key={result.name}
                   className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
@@ -184,6 +191,13 @@ export function Header() {
                   {result.name}
                 </li>
               ))}
+              {results.length >= 5 && (
+                <li className="px-4 py-2 text-blue-500 cursor-pointer hover:bg-gray-100">
+                  <Link href="#" className="text-blue-500">
+                    View all results
+                  </Link>
+                </li>
+              )}
             </ul>
           )}
         </div>
