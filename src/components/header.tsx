@@ -56,6 +56,18 @@ export function Header() {
           <MountainIcon className="h-6 w-6" />
           <span className="sr-only">Acme Inc</span>
         </Link>
+
+        <div className="relative flex-1 mx-4">
+          <SearchIcon
+            className={`absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground`}
+          />
+          <Input
+            type="search"
+            placeholder="Search..."
+            className={`h-9 w-full rounded-md bg-muted pl-9 text-sm focus:outline-none focus:ring-1 focus:ring-primary ${iconColor}`}
+          />
+        </div>
+
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" size="icon" className="ml-auto">
@@ -77,6 +89,15 @@ export function Header() {
                 <SettingsIcon className="h-4 w-4 mr-2" />
                 <span>Settings</span>
               </Link>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={toggleTheme}>
+              {theme === "light" ? (
+                <SunIcon className="h-4 w-4 mr-2" />
+              ) : (
+                <MoonIcon className="h-4 w-4 mr-2" />
+              )}
+              <span>{theme === "light" ? "Dark Mode" : "Light Mode"}</span>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
