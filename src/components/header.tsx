@@ -46,7 +46,7 @@ export function Header() {
         theme === "dark" ? "dark" : ""
       }`}
     >
-      {/* Container para dispositivos móveis */}
+      {/* Mobile */}
       <div className="flex items-center justify-between w-full lg:hidden">
         <Link
           href="/app/home"
@@ -56,10 +56,43 @@ export function Header() {
           <MountainIcon className="h-6 w-6" />
           <span className="sr-only">Acme Inc</span>
         </Link>
-        <Button variant="outline" size="icon" className="ml-auto">
-          <MenuIcon className="h-6 w-6" />
-          <span className="sr-only">Toggle menu</span>
-        </Button>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" size="icon" className="ml-auto">
+              <MenuIcon className={`h-6 w-6 ${iconColor}`} />
+              <span className="sr-only">Toggle menu</span>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-48">
+            <DropdownMenuLabel>Menu</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem asChild>
+              <Link href="/app/profile">
+                <UserIcon className="h-4 w-4 mr-2" />
+                <span>Profile</span>
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link href="/app/settings">
+                <SettingsIcon className="h-4 w-4 mr-2" />
+                <span>Settings</span>
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem asChild>
+              <Link
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleSignOut();
+                }}
+              >
+                <LogOutIcon className="h-4 w-4 mr-2" />
+                <span>Sign out</span>
+              </Link>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
 
       <div className="hidden lg:flex items-center gap-4 w-full">
