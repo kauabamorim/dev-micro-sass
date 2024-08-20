@@ -91,200 +91,210 @@ export function Settings() {
         <div className="grid md:grid-cols-[180px_1fr] lg:grid-cols-[250px_1fr] items-start gap-6 max-w-6xl w-full mx-auto">
           <nav className="text-sm text-muted-foreground grid gap-4">
             <Link
-              href="#"
+              href="#general"
               className="font-semibold text-primary"
               prefetch={false}
             >
               General
             </Link>
-            <Link href="#" prefetch={false}>
+            <Link href="#notifications" prefetch={false}>
               Notifications
             </Link>
-            <Link href="#" prefetch={false}>
+            <Link href="#security" prefetch={false}>
               Security
             </Link>
-            <Link href="#" prefetch={false}>
+            <Link href="#preferences" prefetch={false}>
               Preferences
             </Link>
           </nav>
           <div className="grid gap-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Profile</CardTitle>
-                <CardDescription>
-                  Update your personal information.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <form className="grid gap-6">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="first-name">First Name</Label>
-                      <Input id="first-name" placeholder={user.firstName} />
+            <div id="general">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Profile</CardTitle>
+                  <CardDescription>
+                    Update your personal information.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <form className="grid gap-6">
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="first-name">First Name</Label>
+                        <Input id="first-name" placeholder={user.firstName} />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="last-name">Last Name</Label>
+                        <Input id="last-name" placeholder={user?.lastName} />
+                      </div>
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="last-name">Last Name</Label>
-                      <Input id="last-name" placeholder={user?.lastName} />
+                      <Label htmlFor="username">Username</Label>
+                      <Input id="username" placeholder={user.username} />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="email">Email</Label>
+                      <Input id="email" type="email" placeholder={user.email} />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="password">Password</Label>
+                      <Input
+                        id="password"
+                        type="password"
+                        placeholder="********"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="profile-photo">Profile Photo</Label>
+                      <div className="flex items-center gap-4">
+                        <Avatar className="h-16 w-16">
+                          <AvatarImage
+                            src="/placeholder-user.jpg"
+                            alt="@shadcn"
+                          />
+                          <AvatarFallback>
+                            {user?.email
+                              .split("@")[0]
+                              .split(" ")
+                              .map((name) => name[0])
+                              .join("")}
+                          </AvatarFallback>
+                        </Avatar>
+                        <Button variant="outline">Change Photo</Button>
+                      </div>
+                    </div>
+                  </form>
+                </CardContent>
+                <CardFooter className="border-t p-6">
+                  <Button>Save Changes</Button>
+                </CardFooter>
+              </Card>
+            </div>
+            <div id="notifications">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Notifications</CardTitle>
+                  <CardDescription>
+                    Manage your notification preferences.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-sm font-medium">
+                          Email Notifications
+                        </p>
+                        <p className="text-sm text-muted-foreground">
+                          Receive email notifications for important updates.
+                        </p>
+                      </div>
+                      <Switch id="email-notifications" />
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-sm font-medium">
+                          Desktop Notifications
+                        </p>
+                        <p className="text-sm text-muted-foreground">
+                          Receive desktop notifications for important updates.
+                        </p>
+                      </div>
+                      <Switch id="desktop-notifications" />
                     </div>
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="username">Username</Label>
-                    <Input id="username" placeholder={user.username} />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="email">Email</Label>
-                    <Input id="email" type="email" placeholder={user.email} />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="password">Password</Label>
-                    <Input
-                      id="password"
-                      type="password"
-                      placeholder="********"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="profile-photo">Profile Photo</Label>
-                    <div className="flex items-center gap-4">
-                      <Avatar className="h-16 w-16">
-                        <AvatarImage
-                          src="/placeholder-user.jpg"
-                          alt="@shadcn"
-                        />
-                        <AvatarFallback>
-                          {user?.email
-                            .split("@")[0]
-                            .split(" ")
-                            .map((name) => name[0])
-                            .join("")}
-                        </AvatarFallback>
-                      </Avatar>
-                      <Button variant="outline">Change Photo</Button>
+                </CardContent>
+                <CardFooter className="border-t p-6">
+                  <Button>Save Changes</Button>
+                </CardFooter>
+              </Card>
+            </div>
+            <div id="security">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Security</CardTitle>
+                  <CardDescription>
+                    Manage your account security settings.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-sm font-medium">
+                          Two-Factor Authentication
+                        </p>
+                        <p className="text-sm text-muted-foreground">
+                          Add an extra layer of security to your account.
+                        </p>
+                      </div>
+                      <Switch id="two-factor-auth" />
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-sm font-medium">Login Activity</p>
+                        <p className="text-sm text-muted-foreground">
+                          View your recent login activity.
+                        </p>
+                      </div>
+                      <Button variant="outline">View Activity</Button>
                     </div>
                   </div>
-                </form>
-              </CardContent>
-              <CardFooter className="border-t p-6">
-                <Button>Save Changes</Button>
-              </CardFooter>
-            </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle>Notifications</CardTitle>
-                <CardDescription>
-                  Manage your notification preferences.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium">Email Notifications</p>
-                      <p className="text-sm text-muted-foreground">
-                        Receive email notifications for important updates.
-                      </p>
+                </CardContent>
+                <CardFooter className="border-t p-6">
+                  <Button>Save Changes</Button>
+                </CardFooter>
+              </Card>
+            </div>
+            <div id="preferences">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Preferences</CardTitle>
+                  <CardDescription>
+                    Customize your app preferences.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-sm font-medium">Dark Mode</p>
+                        <p className="text-sm text-muted-foreground">
+                          Switch to a dark color scheme.
+                        </p>
+                      </div>
+                      <Switch
+                        id="dark-mode"
+                        checked={isDarkMode}
+                        onCheckedChange={handleDarkModeChange}
+                      />
                     </div>
-                    <Switch id="email-notifications" />
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium">
-                        Desktop Notifications
-                      </p>
-                      <p className="text-sm text-muted-foreground">
-                        Receive desktop notifications for important updates.
-                      </p>
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-sm font-medium">Language</p>
+                        <p className="text-sm text-muted-foreground">
+                          Select your preferred language.
+                        </p>
+                      </div>
+                      <Select>
+                        <SelectTrigger className="text-muted-foreground">
+                          <SelectValue placeholder="English" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="en">English</SelectItem>
+                          <SelectItem value="es">Español</SelectItem>
+                          <SelectItem value="fr">Français</SelectItem>
+                          <SelectItem value="de">Deutsch</SelectItem>
+                        </SelectContent>
+                      </Select>
                     </div>
-                    <Switch id="desktop-notifications" />
                   </div>
-                </div>
-              </CardContent>
-              <CardFooter className="border-t p-6">
-                <Button>Save Changes</Button>
-              </CardFooter>
-            </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle>Security</CardTitle>
-                <CardDescription>
-                  Manage your account security settings.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium">
-                        Two-Factor Authentication
-                      </p>
-                      <p className="text-sm text-muted-foreground">
-                        Add an extra layer of security to your account.
-                      </p>
-                    </div>
-                    <Switch id="two-factor-auth" />
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium">Login Activity</p>
-                      <p className="text-sm text-muted-foreground">
-                        View your recent login activity.
-                      </p>
-                    </div>
-                    <Button variant="outline">View Activity</Button>
-                  </div>
-                </div>
-              </CardContent>
-              <CardFooter className="border-t p-6">
-                <Button>Save Changes</Button>
-              </CardFooter>
-            </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle>Preferences</CardTitle>
-                <CardDescription>
-                  Customize your app preferences.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium">Dark Mode</p>
-                      <p className="text-sm text-muted-foreground">
-                        Switch to a dark color scheme.
-                      </p>
-                    </div>
-                    <Switch
-                      id="dark-mode"
-                      checked={isDarkMode}
-                      onCheckedChange={handleDarkModeChange}
-                    />
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium">Language</p>
-                      <p className="text-sm text-muted-foreground">
-                        Select your preferred language.
-                      </p>
-                    </div>
-                    <Select>
-                      <SelectTrigger className="text-muted-foreground">
-                        <SelectValue placeholder="English" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="en">English</SelectItem>
-                        <SelectItem value="es">Español</SelectItem>
-                        <SelectItem value="fr">Français</SelectItem>
-                        <SelectItem value="de">Deutsch</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-              </CardContent>
-              <CardFooter className="border-t p-6">
-                <Button onClick={handleSaveChangesTheme}>Save Changes</Button>
-              </CardFooter>
-            </Card>
+                </CardContent>
+                <CardFooter className="border-t p-6">
+                  <Button onClick={handleSaveChangesTheme}>Save Changes</Button>
+                </CardFooter>
+              </Card>
+            </div>
           </div>
         </div>
       </main>
