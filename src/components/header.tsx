@@ -14,13 +14,36 @@ import { deleteCookie, getCookieValue } from "@/lib/utils";
 import { useEffect, useState } from "react";
 import { Sheet, SheetTrigger, SheetContent } from "@/components/ui/sheet";
 
+interface Result {
+  name: string;
+}
+
 export function Header() {
   const [theme, setTheme] = useState("light");
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [results, setResults] = useState<Result[]>([]);
 
   const handleSignOut = () => {
     deleteCookie("token");
     window.location.href = "/";
+  };
+
+  const handleSearch = async (e: any) => {
+    const query = e.target.value;
+    setSearchQuery(query);
+
+    if (query.trim() === "") {
+      setResults([]);
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/search?q=${query}`);
+      const data = await response.json();
+      setResults(data);
+    } catch (error) {
+      console.error("Error fetching search results:", error);
+    }
   };
 
   useEffect(() => {
@@ -64,8 +87,24 @@ export function Header() {
           <Input
             type="search"
             placeholder="Search..."
+            value={searchQuery}
+            onChange={handleSearch}
             className={`h-9 w-full rounded-md bg-muted pl-9 text-sm focus:outline-none focus:ring-1 focus:ring-primary ${iconColor}`}
           />
+
+          {results.length > 0 && (
+            <ul className="absolute z-10 w-full bg-white border border-gray-300 rounded-md shadow-lg mt-1">
+              {results.map((result) => (
+                <li
+                  key={result.name}
+                  className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                  // onClick={() => handleResultClick(result)}
+                >
+                  {result.name}
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
 
         <DropdownMenu>
@@ -130,8 +169,23 @@ export function Header() {
           <Input
             type="search"
             placeholder="Search..."
-            className="h-9 w-[200px] rounded-md bg-muted pl-9 text-sm focus:outline-none focus:ring-1 focus:ring-primary sm:w-[300px]"
+            value={searchQuery}
+            onChange={handleSearch}
+            className={`h-9 w-[200px] rounded-md bg-muted pl-9 text-sm focus:outline-none focus:ring-1 focus:ring-primary sm:w-[300px] ${iconColor}`}
           />
+          {results.length > 0 && (
+            <ul className="absolute z-10 w-full bg-white border border-gray-300 rounded-md shadow-lg mt-1">
+              {results.map((result) => (
+                <li
+                  key={result.name}
+                  className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                  // onClick={() => handleResultClick(result)}
+                >
+                  {result.name}
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
         <div className="flex items-center gap-4 ml-auto">
           <Button

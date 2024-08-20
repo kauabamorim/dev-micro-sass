@@ -30,6 +30,7 @@ export default async function handler(
           firstName,
           lastName,
           username: generateUniqueUsername(),
+          name: `${firstName} ${lastName}`,
           password: hashedPassword,
         },
       });
