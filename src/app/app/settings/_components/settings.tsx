@@ -151,7 +151,13 @@ export function Settings() {
                           src="/placeholder-user.jpg"
                           alt="@shadcn"
                         />
-                        <AvatarFallback>JD</AvatarFallback>
+                        <AvatarFallback>
+                          {user?.email
+                            .split("@")[0]
+                            .split(" ")
+                            .map((name) => name[0])
+                            .join("")}
+                        </AvatarFallback>
                       </Avatar>
                       <Button variant="outline">Change Photo</Button>
                     </div>
