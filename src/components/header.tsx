@@ -376,7 +376,7 @@ export function Header() {
               <DropdownMenuSeparator />
               <DropdownMenuItem>
                 <Link
-                  href="#"
+                  href="/app/profile"
                   className="flex items-center gap-2"
                   prefetch={false}
                 >

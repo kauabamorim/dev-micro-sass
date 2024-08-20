@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 import { jwtVerify } from "jose";
+import { deleteCookie } from "./utils";
 
 const JWT_SECRET =
   process.env.JWT_SECRET ||
@@ -17,7 +18,15 @@ export const verifyToken = async (token: string) => {
     );
     return payload;
   } catch (error) {
-    console.error("Token verification failed:", error);
+    if (error instanceof Error) {
+      if (error.name.includes("JWTExpired")) {
+        deleteCookie("token");
+        window.location.href = "/";
+        console.log("Disconnected: JWT token has expired.");
+      }
+      console.log("Disconnected: JWT token has expired.");
+    }
+
     return null;
   }
 };
