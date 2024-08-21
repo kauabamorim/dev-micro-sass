@@ -274,7 +274,7 @@ export function Header() {
               <DropdownMenuSeparator />
               <DropdownMenuItem>
                 <Link
-                  href="#"
+                  href="/app/chat"
                   className="flex items-center gap-2"
                   prefetch={false}
                 >
@@ -343,7 +343,7 @@ export function Header() {
               <DropdownMenuSeparator />
               <DropdownMenuItem>
                 <Link
-                  href="#"
+                  href="/app/chat"
                   className="flex items-center gap-2"
                   prefetch={false}
                 >
