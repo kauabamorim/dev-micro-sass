@@ -21,10 +21,11 @@ export function FormChat() {
   const [newMessage, setNewMessage] = useState("");
 
   useEffect(() => {
+    fetch("/api/socket");
     socket = io();
 
     socket.on("connect", () => {
-      console.log("Connected to WebSocket server");
+      console.log("Connect WebSocket server");
     });
 
     socket.on("message", (message) => {
