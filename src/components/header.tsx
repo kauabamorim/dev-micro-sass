@@ -136,6 +136,16 @@ export function Header() {
                 <span>Settings</span>
               </Link>
             </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link
+                href="/app/chat"
+                className="flex items-center gap-2"
+                prefetch={false}
+              >
+                <MessageCircleIcon className="h-4 w-4" />
+                <span>Chat</span>
+              </Link>
+            </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={toggleTheme}>
               {theme === "light" ? (
@@ -274,7 +284,7 @@ export function Header() {
               <DropdownMenuSeparator />
               <DropdownMenuItem>
                 <Link
-                  href="/app/chat"
+                  href="#"
                   className="flex items-center gap-2"
                   prefetch={false}
                 >
