@@ -18,6 +18,7 @@ export default function handler(req, res) {
       });
     });
   } else {
+    console.log('response socket res.socket.server.io', res.socket.server.io);
     console.log('Socket is already running');
   }
   res.end();
