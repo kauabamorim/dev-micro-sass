@@ -8,13 +8,14 @@ import {
   SelectContent,
   SelectItem,
 } from "@/components/ui/select";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Textarea } from "@/components/ui/textarea";
 import Link from "next/link";
 import { getCookieValue } from "@/lib/utils";
 import { verifyToken } from "@/lib/auth";
 
 let socket: Socket;
+
 interface User {
   id: string;
   firstName: string;
@@ -22,23 +23,35 @@ interface User {
   email: string;
   username: string;
 }
+
 export function FormChat() {
   const [user, setUser] = useState<User | null>(null);
   const [messages, setMessages] = useState<{ user: string; text: string }[]>(
     []
   );
   const [newMessage, setNewMessage] = useState("");
+  const [currentConversationUser, setCurrentConversationUser] =
+    useState<User | null>(null);
 
   useEffect(() => {
     fetch("/api/socket");
     socket = io();
 
     socket.on("connect", () => {
-      console.log("Connect WebSocket server");
+      console.log("Connected to WebSocket server");
     });
 
     socket.on("message", (message) => {
       setMessages((prev) => [...prev, message]);
+      if (user && message.user !== user.username) {
+        setCurrentConversationUser({
+          id: "",
+          firstName: "",
+          lastName: "",
+          email: "",
+          username: message.user,
+        });
+      }
     });
 
     return () => {
@@ -47,7 +60,7 @@ export function FormChat() {
         console.log("WebSocket disconnected");
       }
     };
-  }, []);
+  }, [user]);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -60,6 +73,7 @@ export function FormChat() {
             const response = await fetch(`/api/user/${decoded.id}`);
             const data = await response.json();
             setUser(data);
+            setCurrentConversationUser(data);
           }
         } catch (error) {
           console.error("Failed to fetch user", error);
@@ -73,10 +87,12 @@ export function FormChat() {
   }, []);
 
   const handleSendMessage = () => {
-    const message = { user: "You", text: newMessage };
-    setMessages((prev) => [...prev, message]);
-    socket.emit("message", message);
-    setNewMessage("");
+    if (user) {
+      const message = { user: user.username, text: newMessage };
+      setMessages((prev) => [...prev, message]);
+      socket.emit("message", message);
+      setNewMessage("");
+    }
   };
 
   return (
@@ -89,14 +105,29 @@ export function FormChat() {
               <span className="sr-only">Go Back</span>
             </Link>
           </Button>
-          <Select defaultValue="John Doe">
+          <Select
+            value={currentConversationUser?.username || ""}
+            onValueChange={(value) => {
+              setCurrentConversationUser({
+                id: "",
+                firstName: "",
+                lastName: "",
+                email: "",
+                username: value,
+              });
+            }}
+          >
             <SelectTrigger className="bg-transparent border-none">
               <div className="flex items-center gap-3">
                 <Avatar className="w-8 h-8">
-                  <AvatarFallback>JD</AvatarFallback>
+                  <AvatarFallback>
+                    {currentConversationUser?.username?.charAt(0) || "U"}
+                  </AvatarFallback>
                 </Avatar>
                 <div>
-                  <div className="font-medium">John Doe</div>
+                  <div className="font-medium">
+                    {currentConversationUser?.username || "Select User"}
+                  </div>
                   <div className="text-xs text-muted-foreground">Online</div>
                 </div>
               </div>
@@ -125,17 +156,17 @@ export function FormChat() {
             <div
               key={index}
               className={`flex items-start gap-3 ${
-                msg.user === "You" ? "justify-end" : ""
+                msg.user === user?.username ? "justify-end" : ""
               }`}
             >
-              {msg.user !== "You" && (
+              {msg.user !== user?.username && (
                 <Avatar className="w-8 h-8">
-                  <AvatarFallback>JD</AvatarFallback>
+                  <AvatarFallback>{msg.user.charAt(0)}</AvatarFallback>
                 </Avatar>
               )}
               <div
                 className={`grid gap-1.5 ${
-                  msg.user === "You"
+                  msg.user === user?.username
                     ? "bg-primary text-primary-foreground"
                     : "bg-card text-card-foreground"
                 } p-3 rounded-lg max-w-[80%]`}
@@ -149,9 +180,9 @@ export function FormChat() {
                   })}
                 </div>
               </div>
-              {msg.user === "You" && (
+              {msg.user === user?.username && (
                 <Avatar className="w-8 h-8">
-                  <AvatarFallback>YO</AvatarFallback>
+                  <AvatarFallback>{user.username.charAt(0)}</AvatarFallback>
                 </Avatar>
               )}
             </div>
@@ -182,6 +213,7 @@ export function FormChat() {
     </div>
   );
 }
+
 function ArrowLeftIcon(props: any) {
   return (
     <svg
