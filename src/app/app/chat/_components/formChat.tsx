@@ -11,10 +11,19 @@ import {
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Textarea } from "@/components/ui/textarea";
 import Link from "next/link";
+import { getCookieValue } from "@/lib/utils";
+import { verifyToken } from "@/lib/auth";
 
 let socket: Socket;
-
+interface User {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  username: string;
+}
 export function FormChat() {
+  const [user, setUser] = useState<User | null>(null);
   const [messages, setMessages] = useState<{ user: string; text: string }[]>(
     []
   );
@@ -38,6 +47,29 @@ export function FormChat() {
         console.log("WebSocket disconnected");
       }
     };
+  }, []);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const token = getCookieValue("token");
+
+      if (token) {
+        try {
+          const decoded = await verifyToken(token);
+          if (decoded) {
+            const response = await fetch(`/api/user/${decoded.id}`);
+            const data = await response.json();
+            setUser(data);
+          }
+        } catch (error) {
+          console.error("Failed to fetch user", error);
+        }
+      } else {
+        console.error("No token found in cookies");
+      }
+    };
+
+    fetchUser();
   }, []);
 
   const handleSendMessage = () => {
