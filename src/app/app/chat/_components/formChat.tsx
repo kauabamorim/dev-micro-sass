@@ -33,7 +33,10 @@ export function FormChat() {
     });
 
     return () => {
-      socket.disconnect();
+      if (socket) {
+        socket.disconnect();
+        console.log("WebSocket disconnected");
+      }
     };
   }, []);
 
@@ -58,7 +61,6 @@ export function FormChat() {
             <SelectTrigger className="bg-transparent border-none">
               <div className="flex items-center gap-3">
                 <Avatar className="w-8 h-8">
-                  {/* <AvatarImage src="/placeholder-user.jpg" alt="Avatar" /> */}
                   <AvatarFallback>JD</AvatarFallback>
                 </Avatar>
                 <div>
@@ -96,7 +98,6 @@ export function FormChat() {
             >
               {msg.user !== "You" && (
                 <Avatar className="w-8 h-8">
-                  {/* <AvatarImage src="/placeholder-user.jpg" alt="Avatar" /> */}
                   <AvatarFallback>JD</AvatarFallback>
                 </Avatar>
               )}
@@ -118,7 +119,6 @@ export function FormChat() {
               </div>
               {msg.user === "You" && (
                 <Avatar className="w-8 h-8">
-                  {/* <AvatarImage src="/placeholder-user.jpg" alt="Avatar" /> */}
                   <AvatarFallback>YO</AvatarFallback>
                 </Avatar>
               )}
@@ -150,7 +150,6 @@ export function FormChat() {
     </div>
   );
 }
-
 function ArrowLeftIcon(props: any) {
   return (
     <svg
