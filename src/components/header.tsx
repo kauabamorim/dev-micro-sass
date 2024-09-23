@@ -13,13 +13,14 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { deleteCookie, getCookieValue } from "@/lib/utils";
 import { useEffect, useState } from "react";
 import { Sheet, SheetTrigger, SheetContent } from "@/components/ui/sheet";
+import { ThemeProvider, useTheme } from "next-themes";
 
 interface Result {
   name: string;
 }
-
+ThemeProvider;
 export function Header() {
-  const [theme, setTheme] = useState("light");
+  const { setTheme } = useTheme();
   const [searchQuery, setSearchQuery] = useState("");
   const [results, setResults] = useState<Result[]>([]);
 
@@ -55,25 +56,15 @@ export function Header() {
     setTheme(getThemeFromCookie());
   }, []);
 
-  const toggleTheme = () => {
-    const newTheme = theme === "light" ? "dark" : "light";
-    document.cookie = `theme=${newTheme}; path=/`;
-    setTheme(newTheme);
-  };
-
-  const iconColor = theme === "dark" ? "text-white" : "text-black";
-
   return (
     <header
-      className={`flex items-center justify-between bg-background px-4 py-3 shadow-sm sm:px-6 ${
-        theme === "dark" ? "dark" : ""
-      }`}
+      className={`flex items-center justify-between bg-background px-4 py-3 shadow-sm sm:px-6`}
     >
       {/* Mobile */}
       <div className="flex items-center justify-between w-full lg:hidden">
         <Link
           href="/app/home"
-          className={`flex items-center gap-2 rounded-full ${iconColor}`}
+          className={`flex items-center gap-2 rounded-full`}
           prefetch={false}
         >
           <MountainIcon className="h-6 w-6" />
@@ -89,7 +80,7 @@ export function Header() {
             placeholder="Search..."
             value={searchQuery}
             onChange={handleSearch}
-            className={`h-9 w-full rounded-md bg-muted pl-9 text-sm focus:outline-none focus:ring-1 focus:ring-primary ${iconColor}`}
+            className={`h-9 w-full rounded-md bg-muted pl-9 text-sm focus:outline-none focus:ring-1 focus:ring-primary`}
           />
 
           {results.length > 0 && (
@@ -98,7 +89,7 @@ export function Header() {
                 <li
                   key={result.name}
                   className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                  // onClick={() => handleResultClick(result)}
+                // onClick={() => handleResultClick(result)}
                 >
                   {result.name}
                 </li>
@@ -117,7 +108,7 @@ export function Header() {
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" size="icon" className="ml-auto">
-              <MenuIcon className={`h-6 w-6 ${iconColor}`} />
+              <MenuIcon className={`h-6 w-6`} />
               <span className="sr-only">Toggle menu</span>
             </Button>
           </DropdownMenuTrigger>
@@ -147,14 +138,26 @@ export function Header() {
               </Link>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={toggleTheme}>
-              {theme === "light" ? (
-                <SunIcon className="h-4 w-4 mr-2" />
-              ) : (
-                <MoonIcon className="h-4 w-4 mr-2" />
-              )}
-              <span>{theme === "light" ? "Dark Mode" : "Light Mode"}</span>
-            </DropdownMenuItem>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon">
+                  <SunIcon className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+                  <MoonIcon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+                  <span className="sr-only">Toggle theme</span>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={() => setTheme("light")}>
+                  Light
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setTheme("dark")}>
+                  Dark
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setTheme("system")}>
+                  System
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
               <Link
@@ -175,7 +178,7 @@ export function Header() {
       <div className="hidden lg:flex items-center gap-4 w-full">
         <Link
           href="/app/home"
-          className={`flex items-center gap-2 rounded-full ${iconColor}`}
+          className={`flex items-center gap-2 rounded-full`}
           prefetch={false}
         >
           <MountainIcon className="h-6 w-6" />
@@ -188,7 +191,7 @@ export function Header() {
             placeholder="Search..."
             value={searchQuery}
             onChange={handleSearch}
-            className={`h-9 w-[200px] rounded-md bg-muted pl-9 text-sm focus:outline-none focus:ring-1 focus:ring-primary sm:w-[300px] ${iconColor}`}
+            className={`h-9 w-[200px] rounded-md bg-muted pl-9 text-sm focus:outline-none focus:ring-1 focus:ring-primary sm:w-[300px]`}
           />
           {results.length > 0 && (
             <ul className="absolute z-10 w-full bg-white border border-gray-300 rounded-md shadow-lg mt-1">
@@ -196,7 +199,7 @@ export function Header() {
                 <li
                   key={result.name}
                   className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                  // onClick={() => handleResultClick(result)}
+                // onClick={() => handleResultClick(result)}
                 >
                   {result.name}
                 </li>
@@ -212,25 +215,32 @@ export function Header() {
           )}
         </div>
         <div className="flex items-center gap-4 ml-auto">
-          <Button
-            variant="ghost"
-            size="icon"
-            className={`rounded-full ${iconColor}`}
-            onClick={toggleTheme}
-          >
-            {theme === "light" ? (
-              <SunIcon className="h-5 w-5" />
-            ) : (
-              <MoonIcon className="h-5 w-5" />
-            )}
-            <span className="sr-only">Toggle theme</span>
-          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon">
+                <SunIcon className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+                <MoonIcon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+                <span className="sr-only">Toggle theme</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => setTheme("light")}>
+                Light
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setTheme("dark")}>
+                Dark
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setTheme("system")}>
+                System
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
                 variant="ghost"
                 size="icon"
-                className={`rounded-full ${iconColor}`}
+                className={`rounded-full`}
               >
                 <BellIcon className="h-5 w-5" />
                 <span className="sr-only">Notifications</span>
@@ -299,7 +309,7 @@ export function Header() {
               <Button
                 variant="ghost"
                 size="icon"
-                className={`rounded-full ${iconColor}`}
+                className={`rounded-full`}
               >
                 <MessageCircleIcon className="h-5 w-5" />
                 <span className="sr-only">Chat</span>
@@ -368,14 +378,14 @@ export function Header() {
               <Button
                 variant="ghost"
                 size="icon"
-                className={`rounded-full ${iconColor}`}
+                className={`rounded-full`}
               >
                 <img
                   src={`https://api.dicebear.com/9.x/identicon/svg`}
                   width={32}
                   height={32}
                   alt="Avatar"
-                  className={`rounded-full ${iconColor}`}
+                  className={`rounded-full`}
                   style={{ aspectRatio: "32/32", objectFit: "cover" }}
                 />
                 <span className="sr-only">User menu</span>
