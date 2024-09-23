@@ -24,7 +24,9 @@ import { Header } from "@/components/header";
 import { getCookieValue } from "@/lib/utils";
 import { useEffect, useState } from "react";
 import { verifyToken } from "@/lib/auth";
+import { ThemeProvider, useTheme } from "next-themes";
 
+ThemeProvider;
 interface User {
   id: string;
   firstName: string;
@@ -34,9 +36,8 @@ interface User {
 }
 
 export function Settings() {
+  const { setTheme } = useTheme();
   const [user, setUser] = useState<User | null>(null);
-  const [isDarkMode, setIsDarkMode] = useState(false);
-
   useEffect(() => {
     const fetchUser = async () => {
       const token = getCookieValue("token");
@@ -59,19 +60,6 @@ export function Settings() {
 
     fetchUser();
   }, []);
-
-  useEffect(() => {
-    const themeCookie = getCookieValue("theme");
-
-    if (themeCookie === "dark") {
-      setIsDarkMode(true);
-    }
-  }, []);
-
-  const handleDarkModeChange = (checked: boolean) => {
-    setIsDarkMode(checked);
-    document.cookie = `theme=${checked ? "dark" : "light"}; path=/`;
-  };
 
   const handleSaveChangesTheme = () => {
     window.location.reload();
@@ -264,9 +252,7 @@ export function Settings() {
                         </p>
                       </div>
                       <Switch
-                        id="dark-mode"
-                        checked={isDarkMode}
-                        onCheckedChange={handleDarkModeChange}
+                        onCheckedChange={(checked) => setTheme(checked ? "dark" : "light")}
                       />
                     </div>
                     <div className="flex items-center justify-between">
