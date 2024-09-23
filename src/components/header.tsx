@@ -10,9 +10,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { deleteCookie, getCookieValue } from "@/lib/utils";
-import { useEffect, useState } from "react";
-import { Sheet, SheetTrigger, SheetContent } from "@/components/ui/sheet";
+import { deleteCookie } from "@/lib/utils";
+import { useState } from "react";
 import { ThemeProvider, useTheme } from "next-themes";
 
 interface Result {
@@ -46,15 +45,6 @@ export function Header() {
       console.error("Error fetching search results:", error);
     }
   };
-
-  useEffect(() => {
-    const getThemeFromCookie = () => {
-      const match = document.cookie.match(/theme=([^;]*)/);
-      return match ? match[1] : "light";
-    };
-
-    setTheme(getThemeFromCookie());
-  }, []);
 
   return (
     <header
