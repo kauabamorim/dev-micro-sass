@@ -18,7 +18,7 @@ export default async function handler(
       return res.status(404).json({ message: "User not found" });
     }
 
-    const { password, id: userId, ...userWithoutSensitiveInfo } = user;
+    const { password, id: userId, createdAt, updatedAt, emailVerified, ...userWithoutSensitiveInfo } = user;
 
     res.status(200).json(userWithoutSensitiveInfo);
   } catch (error) {
