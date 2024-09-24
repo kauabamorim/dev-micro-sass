@@ -25,6 +25,7 @@ import { getCookieValue } from "@/lib/utils";
 import { useEffect, useState } from "react";
 import { verifyToken } from "@/lib/auth";
 import { ThemeProvider, useTheme } from "next-themes";
+import axios from "axios";
 
 ThemeProvider;
 interface User {
@@ -38,6 +39,34 @@ interface User {
 export function Settings() {
   const { setTheme } = useTheme();
   const [user, setUser] = useState<User | null>(null);
+
+  const [formData, setFormData] = useState({
+    firstName: user?.firstName || '',
+    lastName: user?.lastName || '',
+    username: user?.username || '',
+    email: user?.email || '',
+    password: '',
+  });
+
+  const handleChange = (e: any) => {
+    const { id, value } = e.target;
+    setFormData((prev) => ({ ...prev, [id]: value }));
+  };
+
+  const handleSubmitProfile = async (e: any) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post('/api/user/update', {
+        userId: '',
+        ...formData,
+      });
+      alert(response.data.message);
+    } catch (error) {
+      console.error('Failed to update profile:', error);
+      alert('Failed to update profile');
+    }
+  };
+
   useEffect(() => {
     const fetchUser = async () => {
       const token = getCookieValue("token");
@@ -100,62 +129,62 @@ export function Settings() {
               <Card>
                 <CardHeader>
                   <CardTitle>Profile</CardTitle>
-                  <CardDescription>
-                    Update your personal information.
-                  </CardDescription>
+                  <CardDescription>Update your personal information.</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <form className="grid gap-6">
+                  <form className="grid gap-6" onSubmit={handleSubmitProfile}>
                     <div className="grid grid-cols-2 gap-4">
                       <div className="space-y-2">
                         <Label htmlFor="first-name">First Name</Label>
-                        <Input id="first-name" placeholder={user.firstName} />
+                        <Input
+                          id="first-name"
+                          value={formData.firstName}
+                          onChange={handleChange}
+                          placeholder="First Name"
+                        />
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="last-name">Last Name</Label>
-                        <Input id="last-name" placeholder={user?.lastName} />
+                        <Input
+                          id="last-name"
+                          value={formData.lastName}
+                          onChange={handleChange}
+                          placeholder="Last Name"
+                        />
                       </div>
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="username">Username</Label>
-                      <Input id="username" placeholder={user.username} />
+                      <Input
+                        id="username"
+                        value={formData.username}
+                        onChange={handleChange}
+                        placeholder="Username"
+                      />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="email">Email</Label>
-                      <Input id="email" type="email" placeholder={user.email} />
+                      <Input
+                        id="email"
+                        type="email"
+                        value={formData.email}
+                        onChange={handleChange}
+                        placeholder="Email"
+                      />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="password">Password</Label>
                       <Input
                         id="password"
                         type="password"
+                        value={formData.password}
+                        onChange={handleChange}
                         placeholder="********"
                       />
                     </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="profile-photo">Profile Photo</Label>
-                      <div className="flex items-center gap-4">
-                        <Avatar className="h-16 w-16">
-                          <AvatarImage
-                            src="/placeholder-user.jpg"
-                            alt="@shadcn"
-                          />
-                          <AvatarFallback>
-                            {user?.email
-                              .split("@")[0]
-                              .split(" ")
-                              .map((name) => name[0])
-                              .join("")}
-                          </AvatarFallback>
-                        </Avatar>
-                        <Button variant="outline">Change Photo</Button>
-                      </div>
-                    </div>
+                    <Button type="submit">Save Changes</Button>
                   </form>
                 </CardContent>
-                <CardFooter className="border-t p-6">
-                  <Button>Save Changes</Button>
-                </CardFooter>
               </Card>
             </div>
             <div id="notifications">

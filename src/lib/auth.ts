@@ -30,3 +30,13 @@ export const verifyToken = async (token: string) => {
     return null;
   }
 };
+
+export const decryptToken = (token: string) => {
+  try {
+    const decoded = jwt.decode(token);
+    return decoded;
+  } catch (error) {
+    console.error("Failed to decode token:", error);
+    return null;
+  }
+};
