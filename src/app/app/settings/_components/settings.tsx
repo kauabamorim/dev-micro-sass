@@ -39,6 +39,7 @@ interface User {
 export function Settings() {
   const { setTheme } = useTheme();
   const [user, setUser] = useState<User | null>(null);
+  const [userId, setId] = useState("");
 
   const [formData, setFormData] = useState({
     firstName: user?.firstName || '',
@@ -57,7 +58,7 @@ export function Settings() {
     e.preventDefault();
     try {
       const response = await axios.post('/api/user/update', {
-        userId: '',
+        userId: userId,
         ...formData,
       });
       alert(response.data.message);
@@ -77,6 +78,7 @@ export function Settings() {
           if (decoded) {
             const response = await fetch(`/api/user/${decoded.id}`);
             const data = await response.json();
+            setId(decoded.id as string);
             setUser(data);
           }
         } catch (error) {

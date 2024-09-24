@@ -26,7 +26,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 data: updateData,
             });
 
-            return res.status(200).json({ message: 'Profile updated successfully', user: updatedUser });
+            const { password: _, id, createdAt, updatedAt, emailVerified, ...userWithoutSensitiveInfo } = updatedUser;
+
+            return res.status(200).json({ userWithoutSensitiveInfo });
         } catch (error) {
             return res.status(500).json({ error: 'Failed to update profile' });
         }
