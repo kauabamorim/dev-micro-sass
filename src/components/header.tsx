@@ -78,7 +78,7 @@ export function Header() {
               {results.slice(0, 5).map((result) => (
                 <li
                   key={result.name}
-                  className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                  className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-black"
                 // onClick={() => handleResultClick(result)}
                 >
                   {result.name}
@@ -188,7 +188,7 @@ export function Header() {
               {results.slice(0, 5).map((result) => (
                 <li
                   key={result.name}
-                  className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                  className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-black"
                 // onClick={() => handleResultClick(result)}
                 >
                   {result.name}
