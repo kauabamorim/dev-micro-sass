@@ -4,14 +4,26 @@ import { PrismaClient } from "@prisma/client";
 import { getCookieValue } from '@/lib/utils';
 import { decryptToken } from '@/lib/auth';
 import { JwtPayload } from 'jsonwebtoken';
+import cookie from 'cookie';
 
 const prisma = new PrismaClient();
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     if (req.method === 'POST') {
         const { userId, firstName, lastName, username, email, password } = req.body;
-        // const decrip = decryptToken('');
-        // const userIdFromToken = (decrip as JwtPayload)?.id;
+        const cookies = cookie.parse(req.headers.cookie || '');
+        const token = cookies?.token;
+
+        if (!token) {
+            return res.status(401).json({ error: 'Unauthorized' });
+        }
+
+        const decryptedToken = decryptToken(token);
+        const userIdFromToken = (decryptedToken as JwtPayload)?.id;
+
+        if (userIdFromToken !== userId) {
+            return res.status(403).json({ error: 'Forbidden: You can only update your own profile' });
+        }
 
         try {
             const updateData: any = {};
