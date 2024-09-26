@@ -26,6 +26,8 @@ import { useEffect, useState } from "react";
 import { verifyToken } from "@/lib/auth";
 import { ThemeProvider, useTheme } from "next-themes";
 import axios from "axios";
+import { useToast } from "@/components/ui/use-toast";
+import { ToastAction } from "@/components/ui/toast"
 
 ThemeProvider;
 interface User {
@@ -40,6 +42,7 @@ export function Settings() {
   const { setTheme } = useTheme();
   const [user, setUser] = useState<User | null>(null);
   const [userId, setId] = useState("");
+  const { toast } = useToast()
 
   const [formData, setFormData] = useState({
     firstName: user?.firstName || '',
@@ -57,14 +60,25 @@ export function Settings() {
   const handleSubmitProfile = async (e: any) => {
     e.preventDefault();
     try {
-      const response = await axios.post('/api/user/update', {
+      await axios.post('/api/user/update', {
         userId: userId,
         ...formData,
       });
-      alert(response.data.message);
+      toast({
+        title: "Success",
+        description: "Your profile has been updated successfully.",
+        action: (
+          <ToastAction altText="Goto schedule to undo">Undo</ToastAction>
+        ),
+      })
     } catch (error) {
-      console.error('Failed to update profile:', error);
-      alert('Failed to update profile');
+      toast({
+        title: "Failed",
+        description: "Failed to update profile.",
+        action: (
+          <ToastAction altText="Goto schedule to undo">Undo</ToastAction>
+        ),
+      })
     }
   };
 
