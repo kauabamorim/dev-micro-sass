@@ -26,6 +26,24 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         }
 
         try {
+            if (username) {
+                const existingUserByUsername = await prisma.user.findFirst({
+                    where: { username },
+                });
+                if (existingUserByUsername) {
+                    return res.status(400).json({ error: 'Username already in use' });
+                }
+            }
+
+            if (email) {
+                const existingUserByEmail = await prisma.user.findUnique({
+                    where: { email },
+                });
+                if (existingUserByEmail) {
+                    return res.status(400).json({ error: 'Email already in use' });
+                }
+            }
+
             const updateData: any = {};
             if (firstName) updateData.firstName = firstName;
             if (lastName) updateData.lastName = lastName;
