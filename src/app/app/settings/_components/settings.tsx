@@ -151,18 +151,18 @@ export function Settings() {
                   <form className="grid gap-6" onSubmit={handleSubmitProfile}>
                     <div className="grid grid-cols-2 gap-4">
                       <div className="space-y-2">
-                        <Label htmlFor="first-name">First Name</Label>
+                        <Label htmlFor="firstName">First Name</Label>
                         <Input
-                          id="first-name"
+                          id="firstName"
                           value={formData.firstName}
                           onChange={handleChange}
                           placeholder="First Name"
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="last-name">Last Name</Label>
+                        <Label htmlFor="lastName">Last Name</Label>
                         <Input
-                          id="last-name"
+                          id="lastName"
                           value={formData.lastName}
                           onChange={handleChange}
                           placeholder="Last Name"

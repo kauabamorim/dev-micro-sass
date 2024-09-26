@@ -5,6 +5,7 @@ import { getCookieValue } from '@/lib/utils';
 import { decryptToken } from '@/lib/auth';
 import { JwtPayload } from 'jsonwebtoken';
 import cookie from 'cookie';
+import bcrypt from "bcryptjs";
 
 const prisma = new PrismaClient();
 
@@ -49,7 +50,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             if (lastName) updateData.lastName = lastName;
             if (username) updateData.username = username;
             if (email) updateData.email = email;
-            if (password) updateData.password = password;
+            if (password) updateData.password = await bcrypt.hash(password, 10);
 
             const updatedUser = await prisma.user.update({
                 where: { id: userId },
