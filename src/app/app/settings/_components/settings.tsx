@@ -156,7 +156,7 @@ export function Settings() {
                           id="firstName"
                           value={formData.firstName}
                           onChange={handleChange}
-                          placeholder="First Name"
+                          placeholder={user.firstName}
                         />
                       </div>
                       <div className="space-y-2">
@@ -165,7 +165,7 @@ export function Settings() {
                           id="lastName"
                           value={formData.lastName}
                           onChange={handleChange}
-                          placeholder="Last Name"
+                          placeholder={user.lastName}
                         />
                       </div>
                     </div>
@@ -175,7 +175,7 @@ export function Settings() {
                         id="username"
                         value={formData.username}
                         onChange={handleChange}
-                        placeholder="Username"
+                        placeholder={user.username}
                       />
                     </div>
                     <div className="space-y-2">
@@ -185,7 +185,7 @@ export function Settings() {
                         type="email"
                         value={formData.email}
                         onChange={handleChange}
-                        placeholder="Email"
+                        placeholder={user.email}
                       />
                     </div>
                     <div className="space-y-2">
