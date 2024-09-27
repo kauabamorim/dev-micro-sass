@@ -28,6 +28,7 @@ import { ThemeProvider, useTheme } from "next-themes";
 import axios from "axios";
 import { useToast } from "@/components/ui/use-toast";
 import { ToastAction } from "@/components/ui/toast"
+import { Skeleton } from "@/components/ui/skeleton";
 
 ThemeProvider;
 interface User {
@@ -337,36 +338,36 @@ function LoadingSkeleton() {
   return (
     <div className="flex flex-col w-full min-h-screen bg-background text-foreground">
       <header className="bg-background border-b px-4 lg:px-6 h-14 flex items-center justify-between">
-        <div className="w-24 h-6 bg-gray-300 rounded"></div>
+        <Skeleton className="w-24 h-6 bg-gray-300 rounded" />
         <div className="flex items-center gap-4">
-          <div className="w-6 h-6 bg-gray-300 rounded-full"></div>
+          <Skeleton className="w-6 h-6 bg-gray-300 rounded-full" />
         </div>
       </header>
 
       <main className="flex min-h-[calc(100vh_-_theme(spacing.16))] bg-muted/40 flex-1 flex-col gap-4 p-4 md:gap-8 md:p-10">
         <div className="max-w-6xl w-full mx-auto grid gap-2">
-          <div className="h-8 w-1/4 bg-gray-300 rounded"></div>
+          <Skeleton className="h-8 w-1/4 bg-gray-300 rounded" />
         </div>
         <div className="grid md:grid-cols-[180px_1fr] lg:grid-cols-[250px_1fr] items-start gap-6 max-w-6xl w-full mx-auto">
           <nav className="text-sm text-muted-foreground grid gap-4">
-            <div className="h-4 w-1/2 bg-gray-300 rounded"></div>
-            <div className="h-4 w-2/3 bg-gray-300 rounded"></div>
-            <div className="h-4 w-3/4 bg-gray-300 rounded"></div>
-            <div className="h-4 w-1/2 bg-gray-300 rounded"></div>
+            <Skeleton className="h-4 w-1/2 bg-gray-300 rounded" />
+            <Skeleton className="h-4 w-2/3 bg-gray-300 rounded" />
+            <Skeleton className="h-4 w-3/4 bg-gray-300 rounded" />
+            <Skeleton className="h-4 w-1/2 bg-gray-300 rounded" />
           </nav>
           <div className="grid gap-6">
             {[...Array(4)].map((_, index) => (
               <div key={index} className="bg-white p-4 rounded shadow-sm">
                 <div className="animate-pulse">
-                  <div className="h-6 bg-gray-300 rounded mb-4"></div>
+                  <Skeleton className="h-6 bg-gray-300 rounded mb-4" />
                   <div className="space-y-4">
                     {[...Array(4)].map((_, i) => (
                       <div
                         key={i}
                         className="flex items-center justify-between"
                       >
-                        <div className="h-4 bg-gray-300 rounded w-3/4"></div>
-                        <div className="h-4 bg-gray-300 rounded w-1/4"></div>
+                        <Skeleton className="h-4 bg-gray-300 rounded w-3/4" />
+                        <Skeleton className="h-4 bg-gray-300 rounded w-1/4" />
                       </div>
                     ))}
                   </div>
