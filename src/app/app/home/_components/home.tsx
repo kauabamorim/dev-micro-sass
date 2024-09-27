@@ -17,6 +17,7 @@ import { verifyToken } from "@/lib/auth";
 import { Header } from "@/components/header";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea"
+import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 
 interface User {
   id: string;
@@ -28,6 +29,48 @@ interface User {
 
 export function HomeForm() {
   const [user, setUser] = useState<User | null>(null);
+
+  interface Post {
+    id: number;
+    username: string;
+    handle: string | undefined;
+    content: string;
+    image: string | null;
+    timestamp: string;
+  }
+
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [inputValue, setInputValue] = useState("");
+  const [image, setImage] = useState<string | null>(null);
+
+  const handleSend = () => {
+    if (inputValue.trim() === "" && !image) return;
+
+    const newPost = {
+      id: Date.now(),
+      username: user?.firstName + " " + user?.lastName,
+      handle: user?.username,
+      content: inputValue,
+      image: image,
+      timestamp: new Date().toLocaleString(),
+    };
+
+    setPosts([newPost, ...posts]);
+    setInputValue("");
+    setImage(null);
+  };
+
+  const handleImageUpload = (event: any) => {
+    const file = event.target.files[0];
+    if (file) {
+      setImage(URL.createObjectURL(file));
+    }
+  };
+
+  const triggerImageUpload = () => {
+    document.getElementById("imageUploadInput")?.click();
+  };
+
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -95,13 +138,22 @@ export function HomeForm() {
                 <Textarea
                   placeholder="What's happening?"
                   className="resize-none border-0 focus:ring-0 p-0 text-lg font-medium"
+                  value={inputValue}
+                  onChange={(e) => setInputValue(e.target.value)}
                 />
                 <div className="flex items-center justify-between mt-2">
                   <div className="flex items-center gap-2">
-                    <Button variant="ghost" size="icon">
+                    <Button variant="ghost" size="icon" onClick={triggerImageUpload}>
                       <ImageIcon className="h-5 w-5" />
                       <span className="sr-only">Upload image</span>
                     </Button>
+                    <input
+                      id="imageUploadInput"
+                      type="file"
+                      accept="image/*"
+                      style={{ display: "none" }}
+                      onChange={handleImageUpload}
+                    />
                     <Button variant="ghost" size="icon">
                       <GiftIcon className="h-5 w-5" />
                       <span className="sr-only">Upload GIF</span>
@@ -115,95 +167,63 @@ export function HomeForm() {
                       <span className="sr-only">Add emoji</span>
                     </Button>
                   </div>
-                  <Button>Send</Button>
+                  <Button onClick={handleSend}>Send</Button>
                 </div>
               </div>
             </div>
           </div>
-          {/* <div className="space-y-6">
-            <Card className="border-0 shadow-sm">
-              <CardHeader className="flex items-center gap-4">
-                <Avatar className="h-10 w-10 border">
-                  <AvatarImage src="/placeholder-user.jpg" alt="@shadcn" />
-                  <AvatarFallback>JD</AvatarFallback>
-                </Avatar>
-                <div>
-                  <div className="font-medium">John Doe</div>
-                  <div className="text-muted-foreground text-sm">@johndoe</div>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <p>This is a sample tweet with some text content. It can include links, hashtags, and mentions.</p>
-                <img
-                  src="/placeholder.svg"
-                  width={600}
-                  height={400}
-                  alt="Tweet image"
-                  className="mt-4 rounded-md"
-                  style={{ aspectRatio: "600/400", objectFit: "cover" }}
-                />
-              </CardContent>
-              <CardFooter className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <Button variant="ghost" size="icon">
-                    <MessageCircleIcon className="h-5 w-5" />
-                    <span className="sr-only">Comment</span>
-                  </Button>
-                  <Button variant="ghost" size="icon">
-                    <RepeatIcon className="h-5 w-5" />
-                    <span className="sr-only">Retweet</span>
-                  </Button>
-                  <Button variant="ghost" size="icon">
-                    <HeartIcon className="h-5 w-5" />
-                    <span className="sr-only">Like</span>
-                  </Button>
-                  <Button variant="ghost" size="icon">
-                    <ShareIcon className="h-5 w-5" />
-                    <span className="sr-only">Share</span>
-                  </Button>
-                </div>
-                <div className="text-muted-foreground text-sm">10:24 AM - Apr 1, 2023</div>
-              </CardFooter>
-            </Card>
-            <Card className="border-0 shadow-sm">
-              <CardHeader className="flex items-center gap-4">
-                <Avatar className="h-10 w-10 border">
-                  <AvatarImage src="/placeholder-user.jpg" alt="@shadcn" />
-                  <AvatarFallback>JD</AvatarFallback>
-                </Avatar>
-                <div>
-                  <div className="font-medium">Jane Doe</div>
-                  <div className="text-muted-foreground text-sm">@janedoe</div>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <p>
-                  This is another sample tweet with some text content. It can include links, hashtags, and mentions.
-                </p>
-              </CardContent>
-              <CardFooter className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <Button variant="ghost" size="icon">
-                    <MessageCircleIcon className="h-5 w-5" />
-                    <span className="sr-only">Comment</span>
-                  </Button>
-                  <Button variant="ghost" size="icon">
-                    <RepeatIcon className="h-5 w-5" />
-                    <span className="sr-only">Retweet</span>
-                  </Button>
-                  <Button variant="ghost" size="icon">
-                    <HeartIcon className="h-5 w-5" />
-                    <span className="sr-only">Like</span>
-                  </Button>
-                  <Button variant="ghost" size="icon">
-                    <ShareIcon className="h-5 w-5" />
-                    <span className="sr-only">Share</span>
-                  </Button>
-                </div>
-                <div className="text-muted-foreground text-sm">8:15 PM - Mar 28, 2023</div>
-              </CardFooter>
-            </Card>
-          </div> */}
+
+          <div className="space-y-6">
+            {posts.map((post) => (
+              <Card key={post.id} className="border-0 shadow-sm">
+                <CardHeader className="flex items-center gap-4">
+                  <Avatar className="h-10 w-10 border">
+                    <AvatarImage src="/placeholder-user.jpg" alt={post.username} />
+                    <AvatarFallback>{post.username[0]}</AvatarFallback>
+                  </Avatar>
+                  <div>
+                    <div className="font-medium">{post.username}</div>
+                    <div className="text-muted-foreground text-sm">{post.handle}</div>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <p>{post.content}</p>
+                  {post.image && (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={post.image}
+                      width={600}
+                      height={400}
+                      alt="Uploaded content"
+                      className="mt-4 rounded-md"
+                      style={{ aspectRatio: "600/400", objectFit: "cover" }}
+                    />
+                  )}
+                </CardContent>
+                <CardFooter className="flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <Button variant="ghost" size="icon">
+                      <MessageCircleIcon className="h-5 w-5" />
+                      <span className="sr-only">Comment</span>
+                    </Button>
+                    <Button variant="ghost" size="icon">
+                      <RepeatIcon className="h-5 w-5" />
+                      <span className="sr-only">Retweet</span>
+                    </Button>
+                    <Button variant="ghost" size="icon">
+                      <HeartIcon className="h-5 w-5" />
+                      <span className="sr-only">Like</span>
+                    </Button>
+                    <Button variant="ghost" size="icon">
+                      <ShareIcon className="h-5 w-5" />
+                      <span className="sr-only">Share</span>
+                    </Button>
+                  </div>
+                  <div className="text-muted-foreground text-sm">{post.timestamp}</div>
+                </CardFooter>
+              </Card>
+            ))}
+          </div>
         </div>
       </main>
     </div>
