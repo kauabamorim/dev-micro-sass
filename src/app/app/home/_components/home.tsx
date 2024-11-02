@@ -23,6 +23,7 @@ import {
   CardFooter,
   CardHeader,
 } from "@/components/ui/card";
+import { Film, ChevronLeft, ChevronRight } from "lucide-react";
 
 interface User {
   id: string;
@@ -51,11 +52,14 @@ export function HomeForm() {
     overview: string;
   }
 
-  const [posts, setPosts] = useState<Post[]>([]);
-  const [inputValue, setInputValue] = useState("");
-  const [image, setImage] = useState<string | null>(null);
+  interface MovieResponse {
+    results: Movie[];
+    total_pages: number;
+  }
 
   const [movies, setMovies] = useState<Movie[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -80,29 +84,29 @@ export function HomeForm() {
     fetchUser();
   }, []);
 
-  useEffect(() => {
-    const fetchMovies = async () => {
-      const url =
-        "https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=pt-BR&page=1&sort_by=popularity.desc";
-      const options = {
-        method: "GET",
-        headers: {
-          accept: "application/json",
-          Authorization: `Bearer ${process.env.THEMOVIESDB_API_KEY}` || "",
-        },
-      };
-
-      try {
-        const response = await fetch(url, options);
-        const data = await response.json();
-        setMovies(data.results);
-      } catch (error) {
-        console.error("Failed to fetch movies", error);
-      }
+  const fetchMovies = async (page: number) => {
+    const url = `https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=pt-BR&page=${page}&sort_by=popularity.desc`;
+    const options = {
+      method: "GET",
+      headers: {
+        accept: "application/json",
+        Authorization: `Bearer ${process.env.THEMOVIESDB_API_KEY}` || "",
+      },
     };
 
-    fetchMovies();
-  }, []);
+    try {
+      const response = await fetch(url, options);
+      const data: MovieResponse = await response.json();
+      setMovies(data.results);
+      setTotalPages(data.total_pages);
+    } catch (error) {
+      console.error("Failed to fetch movies", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchMovies(currentPage);
+  }, [currentPage]);
 
   if (!user) {
     return (
@@ -142,39 +146,76 @@ export function HomeForm() {
     return new Date(dateString).toLocaleDateString("pt-BR", options);
   };
 
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
       <main>
         <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {movies.map((movie) => (
-              <div
-                key={movie.id}
-                className="bg-white rounded-lg shadow-md overflow-hidden"
-              >
-                <img
-                  src={
-                    movie.poster_path
-                      ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
-                      : "/placeholder.svg?height=750&width=500"
-                  }
-                  alt={movie.title}
-                  className="w-full h-96 object-cover"
-                />
-                <div className="p-4">
-                  <h2 className="text-xl font-semibold text-gray-800 mb-2">
-                    {movie.title}
-                  </h2>
-                  <p className="text-gray-600 mb-2">
-                    {formatDate(movie.release_date)}
-                  </p>
-                  <p className="text-sm text-gray-500 line-clamp-3">
-                    {movie.overview || "Nenhuma descrição disponível."}
-                  </p>
+            {movies && movies.length > 0 ? (
+              movies.map((movie) => (
+                <div
+                  key={movie.id}
+                  className="bg-white rounded-lg shadow-md overflow-hidden"
+                >
+                  <img
+                    src={
+                      movie.poster_path
+                        ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
+                        : "/placeholder.svg?height=750&width=500"
+                    }
+                    alt={movie.title}
+                    className="w-full h-96 object-cover"
+                  />
+                  <div className="p-4">
+                    <h2 className="text-xl font-semibold text-gray-800 mb-2">
+                      {movie.title}
+                    </h2>
+                    <p className="text-gray-600 mb-2">
+                      {formatDate(movie.release_date)}
+                    </p>
+                    <p className="text-sm text-gray-500 line-clamp-3">
+                      {movie.overview || "Nenhuma descrição disponível."}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))
+            ) : (
+              <p className="text-gray-500">Nenhum filme encontrado.</p>
+            )}
+          </div>
+          <div className="mt-8 flex justify-center items-center space-x-4">
+            <Button
+              onClick={handlePreviousPage}
+              disabled={currentPage === 1}
+              className="flex items-center"
+            >
+              <ChevronLeft className="mr-2" />
+              Anterior
+            </Button>
+            <span className="text-gray-700">
+              Página {currentPage} de {totalPages}
+            </span>
+            <Button
+              onClick={handleNextPage}
+              disabled={currentPage === totalPages}
+              className="flex items-center"
+            >
+              Próxima
+              <ChevronRight className="ml-2" />
+            </Button>
           </div>
         </div>
       </main>
